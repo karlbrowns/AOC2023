@@ -1,4 +1,6 @@
-﻿using System.Text.RegularExpressions;
+﻿using System;
+using System.Net.Http.Headers;
+using System.Text.RegularExpressions;
 
 
 void P1()
@@ -249,6 +251,19 @@ void P1()
     Console.WriteLine(result);
     Console.ReadLine();
 }
+long nextvalue (long s, List<long[]> transfer)
+{
+    long i;
+    foreach (long[] t in transfer)
+    {
+        if ((s >= t[1]) && (s < t[1] + t[2]))
+        {
+            i = s - t[1] + t[0];
+            return i;
+        }
+    }
+    return s;
+}
 void P2()
 {
     Modes mode = Modes.seedlist;
@@ -377,134 +392,36 @@ void P2()
                 break;
         }
     }
+    long total = 0;
+    long min = 4294967296;
+    long next;
     for (int j=0; j<seedsinfo.Count; j+=2)
     {
         long start = seedsinfo[j];
         long end = seedsinfo[j + 1];
         for (long k = 0; k < end; k++)
         {
-            seeds.Add(k+start);
+            next = nextvalue(k + start, seedtosoil);
+            next = nextvalue(next, soiltofert);
+            next = nextvalue(next, ferttowate);
+            next = nextvalue(next, watetoligh);
+            next = nextvalue(next, lightotemp);
+            next = nextvalue(next, temptohumi);
+            next = nextvalue(next, humitoloca);
+            if (next < min) min = next;
         }
-
+        total += end;
+        Console.WriteLine(total);
     }
-    Console.WriteLine(seeds.Count);
-    Console.WriteLine(seedtosoil.Count);
-    Console.WriteLine(soiltofert.Count);
-    Console.WriteLine(ferttowate.Count);
-    Console.WriteLine(watetoligh.Count);
-    Console.WriteLine(lightotemp.Count);
-    Console.WriteLine(temptohumi.Count);
-    Console.WriteLine(humitoloca.Count);
-    List<long> soils = new List<long>();
-    List<long> ferts = new List<long>();
-    List<long> waters = new List<long>();
-    List<long> lights = new List<long>();
-    List<long> temps = new List<long>();
-    List<long> humis = new List<long>();
-    List<long> locas = new List<long>();
-    bool found = false;
-    foreach (long s in seeds)
-    {
-        found = false;
-        foreach (long[] t in seedtosoil)
-        {
-            if ((s >= t[1]) && (s < t[1] + t[2]))
-            {
-                i = s - t[1] + t[0];
-                soils.Add(i);
-                found = true;
-            }
-        }
-        if (!found) soils.Add(s);
-    }
-    foreach (long s in soils)
-    {
-        found = false;
-        foreach (long[] t in soiltofert)
-        {
-            if ((s >= t[1]) && (s < t[1] + t[2]))
-            {
-                i = s - t[1] + t[0];
-                ferts.Add(i);
-                found = true;
-            }
-        }
-        if (!found) ferts.Add(s);
-    }
-    foreach (long s in ferts)
-    {
-        found = false;
-        foreach (long[] t in ferttowate)
-        {
-            if ((s >= t[1]) && (s < t[1] + t[2]))
-            {
-                i = s - t[1] + t[0];
-                waters.Add(i);
-                found = true;
-            }
-        }
-        if (!found) waters.Add(s);
-    }
-    foreach (long s in waters)
-    {
-        found = false;
-        foreach (long[] t in watetoligh)
-        {
-            if ((s >= t[1]) && (s < t[1] + t[2]))
-            {
-                i = s - t[1] + t[0];
-                lights.Add(i);
-                found = true;
-            }
-        }
-        if (!found) lights.Add(s);
-    }
-    foreach (long s in lights)
-    {
-        found = false;
-        foreach (long[] t in lightotemp)
-        {
-            if ((s >= t[1]) && (s < t[1] + t[2]))
-            {
-                i = s - t[1] + t[0];
-                temps.Add(i);
-                found = true;
-            }
-        }
-        if (!found) temps.Add(s);
-    }
-    foreach (long s in temps)
-    {
-        found = false;
-        foreach (long[] t in temptohumi)
-        {
-            if ((s >= t[1]) && (s < t[1] + t[2]))
-            {
-                i = s - t[1] + t[0];
-                humis.Add(i);
-                found = true;
-            }
-        }
-        if (!found) humis.Add(s);
-    }
-    foreach (long s in humis)
-    {
-        found = false;
-        foreach (long[] t in humitoloca)
-        {
-            if ((s >= t[1]) && (s < t[1] + t[2]))
-            {
-                i = s - t[1] + t[0];
-                locas.Add(i);
-                found = true;
-            }
-        }
-        if (!found) locas.Add(s);
-    }
-    foreach (long s in locas)
-    {
-        Console.WriteLine(s);
-    }
+    Console.WriteLine(min);
+//    Console.WriteLine(seeds.Count);
+//    Console.WriteLine(seedtosoil.Count);
+//    Console.WriteLine(soiltofert.Count);
+//    Console.WriteLine(ferttowate.Count);
+//    Console.WriteLine(watetoligh.Count);
+//    Console.WriteLine(lightotemp.Count);
+//    Console.WriteLine(temptohumi.Count);
+//    Console.WriteLine(humitoloca.Count);
     Console.WriteLine(result);
     Console.ReadLine();
 }
