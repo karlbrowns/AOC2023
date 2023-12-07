@@ -17,6 +17,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Day_05_If_You_Give_A_Seed_A
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Day_06_Wait_For_It", "Day_06_Wait_For_It\Day_06_Wait_For_It.csproj", "{0C7B3E60-1D63-4389-86C9-AB5F9D578BCD}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Day_07_Camel_Cards", "Day_07_Camel_Cards\Day_07_Camel_Cards.csproj", "{F3D0F1F3-D6FC-4626-9411-A0EC8F5D6B93}"
+EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0F52F131-10CC-4B30-BE88-1129B42C62D1}"
 	ProjectSection(SolutionItems) = preProject
 		new_project.py = new_project.py
@@ -52,6 +54,10 @@ Global
 		{BC998212-F485-419E-BEAD-C9E9A41429CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BC998212-F485-419E-BEAD-C9E9A41429CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BC998212-F485-419E-BEAD-C9E9A41429CE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0C7B3E60-1D63-4389-86C9-AB5F9D578BCD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0C7B3E60-1D63-4389-86C9-AB5F9D578BCD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0C7B3E60-1D63-4389-86C9-AB5F9D578BCD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0C7B3E60-1D63-4389-86C9-AB5F9D578BCD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
