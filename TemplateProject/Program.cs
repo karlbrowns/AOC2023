@@ -21,7 +21,6 @@ void P2()
     foreach (string line in System.IO.File.ReadLines(data))
     {
     }
-    int result = 0;
     Console.WriteLine(result);
     Console.ReadLine();
 }
