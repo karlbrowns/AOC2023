@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Security.Cryptography.X509Certificates;
 using System.Text.RegularExpressions;
-
+using System.Diagnostics;
 
 void P1()
 {
@@ -158,5 +158,12 @@ void P2()
     Console.ReadLine();
 }
 
+Stopwatch t = new Stopwatch();
+t.Start();
 P1();
+t.Stop();
+Console.WriteLine(t.ElapsedMilliseconds);
+t.Start();
 P2();
+t.Stop();
+Console.WriteLine(t.ElapsedMilliseconds);
