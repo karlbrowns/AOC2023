@@ -38,7 +38,7 @@ void P1()
         result++;
     }
     Console.WriteLine(result);
-    Console.ReadLine();
+    //Console.ReadLine();
 }
 
 void P2()
@@ -155,7 +155,7 @@ void P2()
         done = true;
     }
     Console.WriteLine(current_iteration[0]);
-    Console.ReadLine();
+    //Console.ReadLine();
 }
 
 Stopwatch t = new Stopwatch();
