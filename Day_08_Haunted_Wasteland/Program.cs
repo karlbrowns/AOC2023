@@ -73,6 +73,7 @@ void P2()
     string start;
     List<long> initial_steps = new List<long>();
     List<long>[] next_z_array = new List<long>[instructions.Length];
+    List<string>[] next_end_array = new List<string>[instructions.Length];
     List<string> initial_end = new List<string>();
     while (!done)
     {
@@ -100,6 +101,7 @@ void P2()
         for (int i=0; i<instructions.Length; i++)
         {
             next_z_array[i] = new List<long>();
+            next_end_array[i] = new List<string>();
         }
         for (int j = 0; j< ends.Count; j++)
         {
@@ -122,6 +124,7 @@ void P2()
                 }
                 while (start[2] != 'Z');
                 next_z_array[i].Add(result);
+                next_end_array[i].Add(start);
                 Console.WriteLine(result);
             }
         }
@@ -143,7 +146,9 @@ void P2()
         {
             long min = current_iteration.Min();
             index = Array.IndexOf(current_iteration, min);
-            current_iteration[index] += next_z_array[current_iteration[index] % instructions.Length][index];
+            
+            current_iteration[index] += next_z_array[current_iteration[index] % instructions.Length][(int)current_start[index]];
+            current_start[index] = ends.IndexOf(next_end_array[current_iteration[index] % instructions.Length][(int)current_start[index]]);
         }
         while (!((current_iteration[0] == current_iteration[1]) && (current_iteration[1] == current_iteration[2]) && (current_iteration[2] == current_iteration[3]) && (
             current_iteration[3] == current_iteration[4]) && (current_iteration[4] == current_iteration[5])));
