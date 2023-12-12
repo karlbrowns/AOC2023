@@ -1,5 +1,5 @@
 ﻿using System.Text.RegularExpressions;
-
+using System.Diagnostics;
 
 void P1()
 {
@@ -25,5 +25,12 @@ void P2()
     Console.ReadLine();
 }
 
+Stopwatch t = new Stopwatch();
+t.Start();
 P1();
+t.Stop();
+Console.WriteLine("P1 took " + t.ElapsedMilliseconds/1000.0 + " seconds");
+t.Restart();
 P2();
+t.Stop();
+Console.WriteLine("P2 took " + t.ElapsedMilliseconds / 1000.0 + " seconds");
