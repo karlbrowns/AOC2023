@@ -177,12 +177,12 @@ void P2()
         for (x = 0; x < length[0].Length; x++)
         {
             //if (length[y][x] == -1) Console.Write('I');
-            if (length[y][x] == 3) Console.Write('-');
-            if (length[y][x] == 12) Console.Write('|');
-            if (length[y][x] == 6) Console.Write('L');
-            if (length[y][x] == 5) Console.Write('J');
-            if (length[y][x] == 10) Console.Write('F');
-            if (length[y][x] == 9) Console.Write('7');
+            if (length[y][x] == 3) Console.Write('─');
+            if (length[y][x] == 12) Console.Write('│');
+            if (length[y][x] == 6) Console.Write('└');
+            if (length[y][x] == 5) Console.Write('┘');
+            if (length[y][x] == 10) Console.Write('┌');
+            if (length[y][x] == 9) Console.Write('┐');
             if (length[y][x] == 0) Console.Write('.');
         }
         Console.WriteLine();
@@ -191,6 +191,7 @@ void P2()
     edge = false;
     prevdir = 0;
     edgedge = 0;
+    ypos = 45;
     y = ypos;
     x = 0;
     int outside = 0;
@@ -245,7 +246,12 @@ void P2()
                         case 5:
                             if (outside == 8) outside += 2;
                             else outside += 1;
-                            if ((outside == 5) && (x < length[y].Length - 1) && (y < length.Count - 1) && (length[y + 1][x + 1] == 0)) length[y + 1][x + 1] = -1;
+                            if (outside == 5)
+                            {
+                                if ((x < length[y].Length - 1) && (y < length.Count - 1) && (length[y + 1][x + 1] == 0)) length[y + 1][x + 1] = -1;
+                                if ((y < length.Count - 1) && (length[y + 1][x] == 0)) length[y + 1][x] = -1;
+                                if ((x < length[y].Length -1) && (length[y][x+1]==0)) length[y][x+1] = -1;
+                            } 
                             if ((outside == 10) && (x > 0) && (y>0) && (length[y - 1][x-1] == 0)) length[y - 1][x - 1] = -1;
                             y--;
                             prevdir = 4;
@@ -254,7 +260,12 @@ void P2()
                             if (outside == 8) outside += 1;
                             else outside += 2;
                             if ((outside == 6) && (x > 0) && (y < length.Count - 1) && (length[y + 1][x - 1] == 0)) length[y + 1][x - 1] = -1;
-                            if ((outside == 9) && (x < length[y].Length - 1) && (y > 0) && (length[y - 1][x + 1] == 0)) length[y - 1][x + 1] = -1;
+                            if (outside == 9)
+                            {
+                                if ((x < length[y].Length - 1) && (y > 0) && (length[y - 1][x + 1] == 0)) length[y - 1][x + 1] = -1;
+                                if ((x < length[y].Length - 1) && (length[y][x + 1] == 0)) length[y][x + 1] = -1;
+                                if ((y > 0) && (length[y - 1][x]==0)) length[y - 1][x] = -1;
+                            }
                             y++;
                             prevdir = 8;
                             break;
@@ -273,7 +284,12 @@ void P2()
                         case 9:
                             if (outside == 1) outside += 8;
                             else outside += 4;
-                            if ((outside == 9) && (x < length[y].Length - 1) && (y > 0) && (length[y - 1][x + 1] == 0)) length[y - 1][x + 1] = -1;
+                            if (outside == 9)
+                            {
+                                if ((x < length[y].Length - 1) && (y > 0) && (length[y - 1][x + 1] == 0)) length[y - 1][x + 1] = -1;
+                                if ((x < length[y].Length - 1) && (length[y][x + 1] == 0)) length[y][x + 1] = -1;
+                                if ((y > 0) && (length[y - 1][x]==0)) length[y - 1][x] = -1;
+                            }
                             if ((outside==6) && (x > 0) && (y < length.Count - 1) && (length[y + 1][x - 1] == 0)) length[y + 1][x - 1] = -1;
                             x--;
                             prevdir = 1;
@@ -282,7 +298,11 @@ void P2()
                             if (outside == 1) outside += 4;
                             else outside += 8;
                             if ((outside == 5) && (x < length[y].Length - 1) && (y < length.Count - 1) && (length[y + 1][x + 1] == 0)) length[y + 1][x + 1] = -1;
-                            if ((outside == 10) && (x > 0) && (y > 0) && (length[y - 1][x - 1] == 0)) length[y - 1][x - 1] = -1;
+                            if (outside == 10) {
+                                if ((x > 0) && (y > 0) && (length[y - 1][x - 1] == 0)) length[y - 1][x - 1] = -1;
+                                if ((x > 0) && (length[y][x - 1] == 0)) length[y][x - 1] = -1;
+                                if ((y > 0) && (length[y - 1][x]==0)) length[y - 1][x] = -1;
+                            }
                             x++;
                             prevdir = 2;
                             break;
@@ -301,7 +321,12 @@ void P2()
                         case 5:
                             if (outside == 1) outside += 4;
                             else outside += 8;
-                            if ((outside == 5) && (x < length[y].Length - 1) && (y < length.Count - 1) && (length[y + 1][x + 1] == 0)) length[y + 1][x + 1] = -1;
+                            if (outside == 5)
+                            {
+                                if ((x < length[y].Length - 1) && (y < length.Count - 1) && (length[y + 1][x + 1] == 0)) length[y + 1][x + 1] = -1;
+                                if ((y < length.Count - 1) && (length[y + 1][x] == 0)) length[y + 1][x] = -1;
+                                if ((x < length[y].Length - 1) && (length[y][x + 1] == 0)) length[y][x + 1] = -1;
+                            }
                             if ((outside == 10) && (x > 0) && (y > 0) && (length[y - 1][x - 1] == 0)) length[y - 1][x - 1] = -1;
                             x--;
                             prevdir = 1;
@@ -310,7 +335,11 @@ void P2()
                             if (outside == 1) outside += 8;
                             else outside += 4;
                             if ((outside == 9) && (x < length[y].Length - 1) && (y > 0) && (length[y - 1][x + 1] == 0)) length[y - 1][x + 1] = -1;
-                            if ((outside == 6) && (x > 0) && (y < length.Count - 1) && (length[y + 1][x - 1] == 0)) length[y + 1][x - 1] = -1;
+                            if (outside == 6) {
+                                if ((x > 0) && (y < length.Count - 1) && (length[y + 1][x - 1] == 0)) length[y + 1][x - 1] = -1;
+                                if ((x > 0) && (length[y][x - 1] == 0)) length[y][x - 1] = -1;
+                                if ((y < length.Count - 1) && (length[y + 1][x]==0)) length[y + 1][x] = -1;
+                            }
                             x++;
                             prevdir = 2;
                             break;
@@ -330,7 +359,12 @@ void P2()
                             if (outside == 4) outside += 2;
                             else outside += 1;
                             if ((outside == 9) && (x < length[y].Length - 1) && (y > 0) && (length[y - 1][x + 1] == 0)) length[y - 1][x + 1] = -1;
-                            if ((outside == 6) && (x > 0) && (y < length.Count - 1) && (length[y + 1][x - 1] == 0)) length[y + 1][x - 1] = -1;
+                            if (outside == 6)
+                            {
+                                if ((x > 0) && (y < length.Count - 1) && (length[y + 1][x - 1] == 0)) length[y + 1][x - 1] = -1;
+                                if ((x > 0) && (length[y][x - 1] == 0)) length[y][x - 1] = -1;
+                                if ((y < length.Count - 1) && (length[y + 1][x] == 0)) length[y + 1][x] = -1;
+                            }
                             y--;
                             prevdir = 4;
                             break;
@@ -338,7 +372,12 @@ void P2()
                             if (outside == 4) outside += 1;
                             else outside += 2;
                             if ((outside == 5) && (x < length[y].Length - 1) && (y < length.Count - 1) && (length[y + 1][x + 1] == 0)) length[y + 1][x + 1] = -1;
-                            if ((outside == 10) && (x > 0) && (y > 0) && (length[y - 1][x - 1] == 0)) length[y - 1][x - 1] = -1;
+                            if (outside == 10)
+                            {
+                                if ((x > 0) && (y > 0) && (length[y - 1][x - 1] == 0)) length[y - 1][x - 1] = -1;
+                                if ((x > 0) && (length[y][x - 1] == 0)) length[y][x - 1] = -1;
+                                if ((y > 0) && (length[y - 1][x] == 0)) length[y - 1][x] = -1;
+                            }
                             y++;
                             prevdir = 8;
                             break;
@@ -375,8 +414,13 @@ void P2()
                 Console.Write('I');
                 count++;
             }
-            if (length[y][x] == 0) Console.Write('O');
-            if (length[y][x] >  0) Console.Write('#');
+            if (length[y][x] == 0) Console.Write('.');
+            if (length[y][x] == 3) Console.Write('─');
+            if (length[y][x] == 12) Console.Write('│');
+            if (length[y][x] == 6) Console.Write('└');
+            if (length[y][x] == 5) Console.Write('┘');
+            if (length[y][x] == 10) Console.Write('┌');
+            if (length[y][x] == 9) Console.Write('┐');
         }
         Console.WriteLine();
     }
