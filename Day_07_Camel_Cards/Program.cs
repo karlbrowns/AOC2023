@@ -17,7 +17,7 @@ High card, where all cards' labels are distinct: 23456
 
 void P1()
 {
-    int result = 0;
+    long result = 0;
     int index = 0;
     String data = "input.txt";
     List<part1> cards = new List<part1>();
@@ -144,6 +144,7 @@ void P1()
     for (int i=0; i<sorted_cards.Count; i++)
     {
         result += (i + 1) * sorted_cards[i].score;
+        Console.WriteLine(sorted_cards[i].hand + " : " + sorted_cards[i].score);
     }
     Console.WriteLine(result);
     Console.ReadLine();
