@@ -25,7 +25,21 @@ void P1()
     {
         string[] parts = line.Split(' ',StringSplitOptions.RemoveEmptyEntries);
         part1 temp;
-        temp.hand = parts[0];
+        string hand = "";
+        for (int i = 0; i < parts[0].Length; i++)
+        {
+            char c = parts[0][i];
+            switch (c)
+            {
+                case 'A': hand = String.Concat(hand, 'E'); break;
+                case 'K': hand = String.Concat(hand, 'D'); break;
+                case 'Q': hand = String.Concat(hand, 'C'); break;
+                case 'J': hand = String.Concat(hand, 'B'); break;
+                case 'T': hand = String.Concat(hand, 'A'); break;
+                default: hand = String.Concat(hand, c); break;
+            }
+        }
+        temp.hand = hand;
         Dictionary<char, int> temp_dict = new Dictionary<char, int>();
         for (int i=0; i < parts[0].Length; i++)
         {
@@ -48,9 +62,68 @@ void P1()
         int ycount1 = 0, ycount2 = 0;
         xcount1 = x.counts[0];
         ycount1 = y.counts[0];
-        if (xcount1 > ycount1) return 1;
-        if (xcount1 < ycount1) return -1;
-        else return 0;
+        //if (xcount1 > ycount1) return 1;
+        //if (xcount1 < ycount1) return -1;
+        switch (xcount1)
+        {
+            case 5:
+                if (ycount1 != 5) return 1;
+                for (int i = 0; i < 5; i++)
+                {
+                    if (x.hand[i] > y.hand[i]) return 1;
+                    else if (y.hand[i] > x.hand[i]) return -1;
+                }
+                return 0;
+                break;
+            case 4:
+                if (ycount1 < 4) return 1;
+                if (ycount1 > 4) return -1;
+                for (int i = 0; i < 5; i++)
+                {
+                    if (x.hand[i] > y.hand[i]) return 1;
+                    else if (y.hand[i] > x.hand[i]) return -1;
+                }
+                return 0;
+            case 3:
+                if (ycount1 < 3) return 1;
+                if (ycount1 > 3) return -1;
+                switch (x.counts[1])
+                {
+                    case 2:
+                        if (y.counts[1] < 2) return 1;
+                        if (y.counts[1] > 2) return -1;
+                        break;
+                    case 1:
+                        if (y.counts[1] > x.counts[1]) return -1;
+                        break;
+                }
+                for (int i = 0; i < 5; i++)
+                {
+                    if (x.hand[i] > y.hand[i]) return 1;
+                    else if (y.hand[i] > x.hand[i]) return -1;
+                }
+                return 0;
+            case 2:
+                if (ycount1 > 2) return -1;
+                if (ycount1 < 2) return 1;
+                if (x.counts[1] > y.counts[1]) return 1;
+                if (y.counts[1] > x.counts[1]) return -1;
+                for (int i = 0; i < 5; i++)
+                {
+                    if (x.hand[i] > y.hand[i]) return 1;
+                    else if (y.hand[i] > x.hand[i]) return -1;
+                }
+                return 0;
+            case 1:
+                for (int i = 0; i < 5; i++)
+                {
+                    if (x.hand[i] > y.hand[i]) return 1;
+                    else if (y.hand[i] > x.hand[i]) return -1;
+                }
+                return 0;
+        
+        }
+        return 0;
         //xcount1 = x.sorted_hand.Count(xx => xx == c1);
         //if (xcount1 < 5)
         //{
