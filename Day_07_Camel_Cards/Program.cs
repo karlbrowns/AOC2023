@@ -26,7 +26,17 @@ void P1()
         string[] parts = line.Split(' ',StringSplitOptions.RemoveEmptyEntries);
         part1 temp;
         temp.hand = parts[0];
-        temp.sorted_hand = String.Concat(parts[0].OrderBy(c => c));
+        Dictionary<char, int> temp_dict = new Dictionary<char, int>();
+        for (int i=0; i < parts[0].Length; i++)
+        {
+            if (temp_dict.ContainsKey(parts[0][i])) { temp_dict[parts[0][i]]++; }
+            else temp_dict.Add(parts[0][i], 1);
+        }
+        //List<card_freq> tlist = new List<card_freq>();
+        List<int> counts = new List<int>();
+        foreach (var kvp in temp_dict.OrderByDescending(kvp => kvp.Value)) counts.Add(kvp.Value);
+        temp.counts = counts;
+        temp.cards = temp_dict;
         temp.score = int.Parse(parts[1]);
         temp.rank = 0;
         cards.Add(temp);
@@ -36,23 +46,27 @@ void P1()
         char c1, c2;
         int xcount1 = 0, xcount2 = 0;
         int ycount1 = 0, ycount2 = 0;
-        c1 = x.sorted_hand[0];
-        xcount1 = x.sorted_hand.Count(xx => xx == c1);
-        if (xcount1 < 5)
-        {
-            c2 = x.sorted_hand[xcount1];
-            xcount2 = x.sorted_hand.Count(xx => xx == c2);
-        }
-        c1 = y.sorted_hand[0];
-        ycount1 = y.sorted_hand.Count(yy => yy == c1);
-        if (ycount1 < 5)
-        {
-            c2 = y.sorted_hand[ycount1];
-            ycount2 = y.sorted_hand.Count(yy => yy == c2);
-        }
-        if (xcount1 > ycount2) return 1;
-        if (ycount1 > xcount1) return -1;
-        return 0;
+        xcount1 = x.counts[0];
+        ycount1 = y.counts[0];
+        if (xcount1 > ycount1) return 1;
+        if (xcount1 < ycount1) return -1;
+        else return 0;
+        //xcount1 = x.sorted_hand.Count(xx => xx == c1);
+        //if (xcount1 < 5)
+        //{
+        //    c2 = x.sorted_hand[xcount1];
+        //    xcount2 = x.sorted_hand.Count(xx => xx == c2);
+        //}
+        //c1 = y.sorted_hand[0];
+        //ycount1 = y.sorted_hand.Count(yy => yy == c1);
+        //if (ycount1 < 5)
+        //{
+        //    c2 = y.sorted_hand[ycount1];
+        //    ycount2 = y.sorted_hand.Count(yy => yy == c2);
+        //}
+        //if (xcount1 > ycount2) return 1;
+        //if (ycount1 > xcount1) return -1;
+        //return 0;
     }).ToList();
     Console.WriteLine(result);
     Console.ReadLine();
@@ -76,8 +90,8 @@ P2();
 public struct part1
 {
     public string hand;
-    public string sorted_hand;
+    public Dictionary<char , int > cards;
+    public List<int> counts;
     public int score;
     public int rank;
 };
-
