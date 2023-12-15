@@ -141,6 +141,10 @@ void P1()
         //if (ycount1 > xcount1) return -1;
         //return 0;
     }).ToList();
+    for (int i=0; i<sorted_cards.Count; i++)
+    {
+        result += (i + 1) * sorted_cards[i].score;
+    }
     Console.WriteLine(result);
     Console.ReadLine();
 }
