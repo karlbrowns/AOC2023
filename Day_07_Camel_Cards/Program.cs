@@ -115,6 +115,7 @@ void P1()
                 }
                 return 0;
             case 1:
+                if (ycount1 > 1) return -1;
                 for (int i = 0; i < 5; i++)
                 {
                     if (x.hand[i] > y.hand[i]) return 1;
