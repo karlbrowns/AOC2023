@@ -31,6 +31,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Day_12_Hot_Springs", "Day_1
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Day_13_Point_of_Incidence", "Day_13_Point_of_Incidence\Day_13_Point_of_Incidence.csproj", "{05A9C06A-4F16-4AA3-B097-1DC70CC46F60}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Day_15_Lens_Library", "Day_15_Lens_Library\Day_15_Lens_Library.csproj", "{66A22BD8-ED52-41D2-85EB-C442B546F99F}"
+EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0F52F131-10CC-4B30-BE88-1129B42C62D1}"
 	ProjectSection(SolutionItems) = preProject
 		new_project.py = new_project.py
@@ -99,6 +101,10 @@ Global
 		{05A9C06A-4F16-4AA3-B097-1DC70CC46F60}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{05A9C06A-4F16-4AA3-B097-1DC70CC46F60}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{05A9C06A-4F16-4AA3-B097-1DC70CC46F60}.Release|Any CPU.Build.0 = Release|Any CPU
+		{66A22BD8-ED52-41D2-85EB-C442B546F99F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{66A22BD8-ED52-41D2-85EB-C442B546F99F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{66A22BD8-ED52-41D2-85EB-C442B546F99F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{66A22BD8-ED52-41D2-85EB-C442B546F99F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
