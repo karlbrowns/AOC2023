@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Formats.Asn1;
 using System.Reflection.Metadata.Ecma335;
+using static System.Net.Mime.MediaTypeNames;
 
 void P1()
 {
@@ -35,6 +36,7 @@ void P1()
         }
         current.hash_mask = hmask;
         current.full_mask = fmask;
+        current.result = true;
         hotSprings.Add(current);
     }
     int maxwidth = 0;
@@ -99,6 +101,49 @@ void P1()
     Console.ReadLine();
 }
 
+void calc_option (HotSprings current, int step, List<int> startpos, int index_updated, int testwidth, UInt128[] tests)
+{
+    int j = step;
+    UInt128 test;
+
+    //if ((j > index_updated)) startpos[j] = startpos[j - 1] + current.data[j - 1] + 1;
+    while (startpos[j] < testwidth)
+    {
+        test = tests[j] << startpos[j];
+        if ((test & current.full_mask) == test) break;
+        startpos[j]++;
+    }
+    if (startpos[j] == testwidth)
+    {
+        current.result = false;
+        return;
+    }
+    else
+    {
+        if (j==current.data.Count-1)
+        {
+            UInt128 full_test = 0;
+            for (int k = 0; k < current.data.Count; k++)
+            {
+                full_test += tests[k] << startpos[k];
+            }
+            if ((full_test & current.hash_mask) == current.hash_mask)
+            {
+                current.result = true;
+            }
+        }
+        else calc_option(current, j+1, startpos, index_updated, testwidth, tests);
+        return;
+    }
+    
+}
+
+void test_func (HotSprings current)
+{
+    current.data.Add(0);
+    current.result = true;
+    return;
+}
 void P2()
 {   
     int result = 0;
@@ -135,7 +180,9 @@ void P2()
         }
         current.hash_mask = hmask;
         current.full_mask = fmask;
+        current.result = false;
         hotSprings.Add(current);
+        test_func(current);
     }
     int maxwidth = 0;
     for (int i = 0; i < hotSprings.Count; i++)
@@ -169,7 +216,7 @@ void P2()
         bool done = false;
         bool firstpass = true;
         int index_updated = 0;
-        while (!done)
+        while (!current.result)
         {
             UInt128 test = 0;
             int j,k,l;
@@ -178,87 +225,94 @@ void P2()
                 //Console.WriteLine(j);
 
                 if ((j > index_updated)) startpos[j] = startpos[j - 1] + current.data[j - 1] + 1;
-                while (startpos[j]<testwidth)
-                {
-                    test = tests[j] << startpos[j];
-                    if ((test & current.full_mask) == test) break;
-                    startpos[j]++;
-                }
-                //for (int m = 0; m < current.data.Count; m++) Console.Write(startpos[m] + ",");
-                //Console.Write("\r");
-                if ((test & current.full_mask) == test)
-                {
-                    if (j == current.data.Count - 1)
-                    {
-                        UInt128 full_test = 0;
-                        for (k = 0; k < current.data.Count; k++)
-                        {
-                            full_test += tests[k] << startpos[k];
-                        }
-                        if ((full_test & current.hash_mask) == current.hash_mask)
-                        {
-                            options++;
-                            for (int m = 0; m < current.data.Count; m++) Console.Write(startpos[m] + ",");
-                            Console.WriteLine();
-                            // this is the first one we've found, so these are the minimum start positions that work.
-                            // Store them.  
-                            if (firstpass)
-                            {
-                                for (l = 0; l < startpos.Count - 1; l++)
-                                {
-                                    origstartpos[l] = startpos[l];
-                                }
-                                firstpass = false;
-                            }
-                            break;
-                        }
-                    }
-                    else continue;
-                    //Console.WriteLine(test);
-                }
             }
-            // and then iterate over the next positions
-            // but what if one position is now beyond where it can go
-            // we keep going through until something else breaks and that
-            // a) takes too long, b) will break something else or whatever
-            if (startpos.Last() >= testwidth)
+            while (!current.result)
             {
-                index_updated++;
-                if (index_updated == current.data.Count)
-                {
-                    done = true;
-                    break;
-                }
-                for (l=0; l<index_updated; l++)
-                {
-                    startpos[l] = origstartpos[l];
-                }
-                startpos[l]++;
-
+                calc_option(current, 0, startpos, 0, testwidth, tests);
+                if (current.result) options++;
             }
-            else
-            {
-                for (l = 0; l < startpos.Count - 1; l++)
-                {
-                    if (startpos[l] + 1 + current.data[l] < startpos[l + 1])
-                    {
-                        startpos[l]++;
-                        index_updated = l;
-                        break;
-                    }
-                }
-                if (l == startpos.Count - 1)
-                {
-                    startpos[l]++;
-                    index_updated = l;
-                    if (startpos[l] >= lastpos + 1) done = true;
-                }
-            }
-            for (int m = 0; m < l; m++) { startpos[m] = origstartpos[m]; }
-            //Console.WriteLine();
-            Console.WriteLine(options + ":");
-
+//                while (startpos[j]<testwidth)
+//                {
+//                    test = tests[j] << startpos[j];
+//                    if ((test & current.full_mask) == test) break;
+//                    startpos[j]++;
+//                }
+//                //for (int m = 0; m < current.data.Count; m++) Console.Write(startpos[m] + ",");
+//                //Console.Write("\r");
+//                if ((test & current.full_mask) == test)
+//                {
+//                    if (j == current.data.Count - 1)
+//                    {
+//                        UInt128 full_test = 0;
+//                        for (k = 0; k < current.data.Count; k++)
+//                        {
+//                            full_test += tests[k] << startpos[k];
+//                        }
+//                        if ((full_test & current.hash_mask) == current.hash_mask)
+//                        {
+//                            options++;
+//                            for (int m = 0; m < current.data.Count; m++) Console.Write(startpos[m] + ",");
+//                            Console.WriteLine();
+//                            // this is the first one we've found, so these are the minimum start positions that work.
+//                            // Store them.  
+//                            if (firstpass)
+//                            {
+//                                for (l = 0; l < startpos.Count - 1; l++)
+//                                {
+//                                    origstartpos[l] = startpos[l];
+//                                }
+//                                firstpass = false;
+//                            }
+//                            break;
+//                        }
+//                    }
+//                    else continue;
+//                    //Console.WriteLine(test);
+//                }
+//            }
+//            // and then iterate over the next positions
+//            // but what if one position is now beyond where it can go
+//            // we keep going through until something else breaks and that
+//            // a) takes too long, b) will break something else or whatever
+//            if (startpos.Last() >= testwidth)
+//            {
+//                index_updated++;
+//                if (index_updated == current.data.Count)
+//                {
+//                    done = true;
+//                    break;
+//                }
+//                for (l=0; l<index_updated; l++)
+//                {
+//                    startpos[l] = origstartpos[l];
+//                }
+//                startpos[l]++;
+//
+//            }
+//            else
+//            {
+//                for (l = 0; l < startpos.Count - 1; l++)
+//                {
+//                    if (startpos[l] + 1 + current.data[l] < startpos[l + 1])
+//                    {
+//                        startpos[l]++;
+//                        index_updated = l;
+//                        break;
+//                    }
+//                }
+//                if (l == startpos.Count - 1)
+//                {
+//                    startpos[l]++;
+//                    index_updated = l;
+//                    if (startpos[l] >= lastpos + 1) done = true;
+//                }
+//            }
+//            for (int m = 0; m < l; m++) { startpos[m] = origstartpos[m]; }
+//            //Console.WriteLine();
+//            Console.WriteLine(options + ":");
+//
         }
+
         Console.WriteLine();
         Console.WriteLine(i + " " + options);
         result += options;
@@ -284,4 +338,5 @@ struct HotSprings
     public List<int> data;
     public UInt128 hash_mask;
     public UInt128 full_mask;
+    public bool result;
 };
