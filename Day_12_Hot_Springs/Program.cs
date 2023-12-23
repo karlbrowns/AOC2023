@@ -101,48 +101,62 @@ void P1()
     Console.ReadLine();
 }
 
-void calc_option (HotSprings current, int step, List<int> startpos, int index_updated, int testwidth, UInt128[] tests)
+HotSprings calc_option (HotSprings current, int step, List<int> startpos, int index_updated, int testwidth, UInt128[] tests)
 {
     int j = step;
     UInt128 test;
 
-    //if ((j > index_updated)) startpos[j] = startpos[j - 1] + current.data[j - 1] + 1;
-    while (startpos[j] < testwidth)
+    if ((j > 0)) startpos[j] = startpos[j - 1] + current.data[j - 1] + 1;
+    else startpos[j] = 0;
+    do
     {
-        test = tests[j] << startpos[j];
-        if ((test & current.full_mask) == test) break;
-        startpos[j]++;
-    }
-    if (startpos[j] == testwidth)
-    {
-        current.result = false;
-        return;
-    }
-    else
-    {
-        if (j==current.data.Count-1)
+        while (startpos[j] < testwidth)
         {
-            UInt128 full_test = 0;
-            for (int k = 0; k < current.data.Count; k++)
-            {
-                full_test += tests[k] << startpos[k];
-            }
-            if ((full_test & current.hash_mask) == current.hash_mask)
-            {
-                current.result = true;
-            }
+            test = tests[j] << startpos[j];
+            if ((test & current.full_mask) == test) break;
+            startpos[j]++;
         }
-        else calc_option(current, j+1, startpos, index_updated, testwidth, tests);
-        return;
-    }
+        if (startpos[j] >= testwidth)
+        {
+            current.result = false;
+            return current;
+        }
+        else
+        {
+            if (j == current.data.Count - 1)
+            {
+                UInt128 full_test = 0;
+                for (int k = 0; k < current.data.Count; k++)
+                {
+                    full_test += tests[k] << startpos[k];
+                }
+                if ((full_test & current.hash_mask) == current.hash_mask)
+                {
+                    current.result = true;
+                }
+                else
+                {
+                    current.result = false;
+                }
+                return current;
+            }
+            else
+            {
+                current = calc_option(current, j + 1, startpos, index_updated, testwidth, tests);
+                if (current.result) return current;
+            }
+            //return current;
+        }
+        startpos[j]++;
+    } while (true);
     
 }
 
-void test_func (HotSprings current)
+HotSprings test_func (HotSprings current)
 {
     current.data.Add(0);
     current.result = true;
-    return;
+    return current;
 }
 void P2()
 {   
@@ -182,7 +196,7 @@ void P2()
         current.full_mask = fmask;
         current.result = false;
         hotSprings.Add(current);
-        test_func(current);
+        //current = test_func(current);
     }
     int maxwidth = 0;
     for (int i = 0; i < hotSprings.Count; i++)
@@ -228,7 +242,7 @@ void P2()
             }
             while (!current.result)
             {
-                calc_option(current, 0, startpos, 0, testwidth, tests);
+                current = calc_option(current, 0, startpos, 0, testwidth, tests);
                 if (current.result) options++;
             }
 //                while (startpos[j]<testwidth)
@@ -313,6 +327,7 @@ void P2()
 //
         }
 
+        for (int m = 0; m < startpos.Count; m++) { Console.Write(startpos[m] + "," ); }
         Console.WriteLine();
         Console.WriteLine(i + " " + options);
         result += options;
