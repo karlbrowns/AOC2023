@@ -399,7 +399,7 @@ void P2()
 
     }
     Console.WriteLine(result);
-    Console.ReadLine();
+   // Console.ReadLine();
 }
 
 Stopwatch t = new Stopwatch();
