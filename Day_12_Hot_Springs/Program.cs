@@ -104,20 +104,14 @@ void P1()
 
 List<Dictionary<int, long>> prev_results;
 
-HotSprings calc_option (HotSprings current, int step, List<int> startpos, List<int> endpos,  int index_updated, int testwidth, UInt128[] tests)
+HotSprings calc_option (HotSprings current, int step, List<int> startpos, List<int> endpos,  int index_updated, int testwidth, UInt128[] tests, UInt128 fulltest)
 {
     int j = step;
-    UInt128 test;
+    UInt128 test=0;
     UInt128 one = 1;
     long start_opts;
     long temp;
     int first_startpos = startpos[j];
-    if (prev_results.Count< j+1) prev_results.Add(new Dictionary<int, long>());
-    else if (prev_results[j].ContainsKey(first_startpos))
-    {
-        current.options += prev_results[j][first_startpos];
-        return current;
-    }
     if (current.backstep > 0)
     {
         current.backstep--;
@@ -132,29 +126,31 @@ HotSprings calc_option (HotSprings current, int step, List<int> startpos, List<i
         while (startpos[j] <= endpos[j])
         {
             test = tests[j] << startpos[j];
-            mask = (tests[j] << startpos[j]) + (one << (startpos[j] + current.data[j]));
-            if (startpos[j] > 0) mask += (one << (startpos[j] - 1));
+            fulltest += test;
+            mask = (one << (startpos[j] + current.data[j] + 1)) - one;//(tests[j] << startpos[j]) + (one << (startpos[j] + current.data[j]));
+            //if (startpos[j] > 0) mask += (one << (startpos[j] - 1));
+            //mask += hashmask;
             mask = mask & current.hash_mask;
-            if (((test & current.full_mask) == test) && (((test & current.hash_mask) ^ mask)==0)) break;
+            if (((test & current.full_mask) == test) && (((fulltest & current.hash_mask) ^ mask)==0)) break;
             startpos[j]++;
+            fulltest -= test;
         }
         if (startpos[j] > endpos[j])
         {
             current.result = false;
             current.backstep = 1;
-            if (!prev_results[j].ContainsKey(first_startpos)) prev_results[j].Add(first_startpos, current.options - start_opts);
             return current;
         }
         else
         {
             if (j == current.data.Count - 1)
             {
-                UInt128 full_test = 0;
-                for (int k = 0; k < current.data.Count; k++)
-                {
-                    full_test += tests[k] << startpos[k];
-                }
-                if ((full_test & current.hash_mask) == current.hash_mask)
+                //UInt128 full_test = 0;
+                //for (int k = 0; k < current.data.Count; k++)
+                //{
+                //    fulltest +=tests[k] << startpos[k];
+                //}
+                if ((fulltest & current.hash_mask) == current.hash_mask)
                 {
                     current.result = true;
                     current.options++;
@@ -168,15 +164,37 @@ HotSprings calc_option (HotSprings current, int step, List<int> startpos, List<i
             }
             else
             {
-                current = calc_option(current, j + 1, startpos, endpos, index_updated, testwidth, tests);
+
+//#if DICTIONARY
+                if (prev_results.Count >= j + 1)
+                {
+                    if (prev_results[j].ContainsKey(startpos[j]))
+                    {
+                        current.options += prev_results[j][startpos[j]];
+                    }
+                    else
+                    {
+                        start_opts = current.options;
+                        current = calc_option(current, j + 1, startpos, endpos, index_updated, testwidth, tests, fulltest);
+                        if (current.options > start_opts) prev_results[j].Add(startpos[j], current.options - start_opts);
+                    }
+                }
+                else
+                {
+                    prev_results.Add(new Dictionary<int, long>());
+                    start_opts = current.options;
+//#endif
+                current = calc_option(current, j + 1, startpos, endpos, index_updated, testwidth, tests, fulltest);
+//#if DICTIONARY
+                if (current.options > start_opts) prev_results[j].Add(startpos[j], current.options - start_opts);
+                }
+//#endif
                 //if (current.result)
                 {
                     current.result = false;
                     if (current.backstep > 0)
                     {
                         current.backstep--;
-                        if (prev_results[j].ContainsKey(first_startpos)) ;
-                        else prev_results[j].Add(first_startpos, current.options - start_opts);
                         if (current.backstep > 0) return current;
                     }
 
@@ -185,6 +203,8 @@ HotSprings calc_option (HotSprings current, int step, List<int> startpos, List<i
             //return current;
         }
         startpos[j]++;
+        fulltest -= test;
+
     } while (true);
     
 }
@@ -287,7 +307,7 @@ void P2()
                 if ((j > index_updated)) startpos[j] = startpos[j - 1] + current.data[j - 1] + 1;
             }
             prev_results = new List<Dictionary<int, long>>();
-            current = calc_option(current, 0, startpos, endpos, 0, testwidth, tests);
+            current = calc_option(current, 0, startpos, endpos, 0, testwidth, tests, (UInt128)0);
             options+= current.options;
             current.result = true;
             //                while (startpos[j]<testwidth)
