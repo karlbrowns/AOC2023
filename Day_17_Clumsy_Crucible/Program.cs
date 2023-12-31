@@ -1,11 +1,14 @@
 ﻿using System.Text.RegularExpressions;
 using System.Diagnostics;
+using Day_17_Clumsy_Crucible;
 
 List<Nodes> nodes = new List<Nodes>();
 List<List<int>> map = new List<List<int>>();
 List<List<int>> visited_map = new List<List<int>>();
 
 int[,] table = new int[9,4];
+int[,] graph;
+
 void build_graph(int current_node)
 {
     table[1,0] = 1;
@@ -22,7 +25,7 @@ void build_graph(int current_node)
     table[8,2] = 2048;
     current_node = 0;
     // initial node
-    Nodes temp;
+    Nodes temp = new Nodes();
     temp.x = nodes[current_node].x + 1;
     temp.y = nodes[current_node].y;
     temp.dirn = 1;
@@ -44,7 +47,7 @@ void build_graph(int current_node)
     while (active_nodes) 
     {
         active_nodes = false;
-        for (int thisnode; thisnode < nodes[current_node].neighbours.Count; thisnode++)
+        for (int thisnode = 0; thisnode < nodes[current_node].neighbours.Count; thisnode++)
         {
             int node = nodes[current_node].neighbours[thisnode];
             if (visited_map[nodes[node].y][nodes[node].x] == nodes[node].dirn * table[nodes[node].dirn,nodes[node].dirsteps - 1])
@@ -151,7 +154,7 @@ void P1()
     int y = 0;
     int dirn = 1;   // 1 = Right, 2 = Left, 4 = Down, 8 = Up
     int dirncount = 0;
-    Nodes temp;
+    Nodes temp = new Nodes();
     temp.x = x; temp.y = y;
     temp.cost = 0;
     temp.dirn = 0;
@@ -159,7 +162,22 @@ void P1()
     temp.neighbours = new List<int>();
     nodes.Add(temp);
     build_graph(0);
-
+    Dijkstra find_path= new Dijkstra();
+    int destination=0;
+    graph = new int[nodes.Count, nodes.Count];
+    for (int i=0; i<nodes.Count; i++)
+    {
+        for (int j=0; j<nodes.Count; j++)
+        {
+            if (nodes[i].neighbours.Contains(j)) graph[i, j] = nodes[j].cost;
+            else graph[i, j] = 0;
+            if ((nodes[i].y == map.Count - 1) && (nodes[i].x == map[0].Count - 1)) destination = i;
+        }
+        Console.WriteLine("Node " + i + " at " + nodes[i].x + "," + nodes[i].y);
+    }
+    find_path.V = nodes.Count;
+    find_path.dijkstra(graph, 0);
+    Console.WriteLine(destination);
     Console.WriteLine(result);
     Console.ReadLine();
 }
@@ -186,7 +204,7 @@ P2();
 t.Stop();
 Console.WriteLine("P2 took " + t.ElapsedMilliseconds / 1000.0 + " seconds");
 
-struct Nodes
+class Nodes
 {
     public int x;
     public int y;
