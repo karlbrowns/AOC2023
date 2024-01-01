@@ -18,6 +18,7 @@ namespace Day_17_Clumsy_Crucible
         // not yet included in shortest
         // path tree
         public int V = 9;
+        public int[] dist;
         int minDistance(int[] dist, bool[] sptSet)
         {
             // Initialize min value
@@ -49,7 +50,7 @@ namespace Day_17_Clumsy_Crucible
         // matrix representation
         public void dijkstra(int[,] graph, int src)
         {
-            int[] dist
+            dist
                 = new int[V]; // The output array. dist[i]
                               // will hold the shortest
                               // distance from src to i

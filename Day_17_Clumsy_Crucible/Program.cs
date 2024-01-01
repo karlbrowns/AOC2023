@@ -47,16 +47,18 @@ void build_graph(int current_node)
     while (active_nodes) 
     {
         active_nodes = false;
-        for (int thisnode = 0; thisnode < nodes[current_node].neighbours.Count; thisnode++)
+        //for (int thisnode = 0; thisnode < nodes[current_node].neighbours.Count; thisnode++)
+        foreach(int node in nodes[current_node].neighbours) 
         {
-            int node = nodes[current_node].neighbours[thisnode];
-            if (visited_map[nodes[node].y][nodes[node].x] == nodes[node].dirn * table[nodes[node].dirn,nodes[node].dirsteps - 1])
+            //int node = nodes[current_node].neighbours[thisnode];
+            if ((visited_map[nodes[node].y][nodes[node].x] & (nodes[node].dirn * table[nodes[node].dirn, nodes[node].dirsteps-1]))== nodes[node].dirn * table[nodes[node].dirn,nodes[node].dirsteps - 1])
             {
                 nodes[node].dirn = 0;
                 continue;
             }
+            
             active_nodes = true;
-            visited_map[nodes[node].y][nodes[node].x] = nodes[node].dirn * table[nodes[node].dirn,nodes[node].dirsteps - 1];
+            visited_map[nodes[node].y][nodes[node].x] += nodes[node].dirn * table[nodes[node].dirn,nodes[node].dirsteps - 1];
             List<int> dirns = new List<int>();
             dirns.Add(1); dirns.Add(2); dirns.Add(4); dirns.Add(8);
             switch (nodes[node].dirn)
@@ -68,7 +70,7 @@ void build_graph(int current_node)
                 case 0: dirns = new List<int>(); break;
             }
             if (nodes[node].dirsteps == 3) dirns.Remove(nodes[node].dirn);
-
+            Console.WriteLine("Neighbours of " + node);
             foreach (int dirn in dirns)
             {
                 temp = new Nodes();
@@ -82,9 +84,11 @@ void build_graph(int current_node)
                         temp.dirn = dirn;
                         if (dirn != nodes[node].dirn) temp.dirsteps = 1;
                         else temp.dirsteps = nodes[node].dirsteps + 1;
+                        if (((visited_map[temp.x][temp.y] & (temp.dirn * table[temp.dirn, temp.dirsteps - 1])) == temp.dirn * table[temp.dirn, temp.dirsteps - 1])) break;
                         temp.cost = map[temp.y][temp.x];
                         temp.neighbours = new List<int>();
                         nodes.Add(temp);
+                        Console.WriteLine((nodes.Count - 1) + ":" + temp.x + "," + temp.y + " in " + temp.dirn);
                         nodes[node].neighbours.Add(nodes.Count - 1);
                         added = true;
                         break;
@@ -95,9 +99,11 @@ void build_graph(int current_node)
                         temp.dirn = dirn;
                         if (dirn != nodes[node].dirn) temp.dirsteps = 1;
                         else temp.dirsteps = nodes[node].dirsteps + 1;
+                        if (((visited_map[temp.x][temp.y] & (temp.dirn * table[temp.dirn, temp.dirsteps - 1])) == temp.dirn * table[temp.dirn, temp.dirsteps - 1])) break;
                         temp.cost = map[temp.y][temp.x];
                         temp.neighbours = new List<int>();
                         nodes.Add(temp);
+                        Console.WriteLine((nodes.Count - 1) + ":" + temp.x + "," + temp.y + " in " + temp.dirn);
                         nodes[node].neighbours.Add(nodes.Count - 1);
                         added = true;
                         break;
@@ -108,9 +114,11 @@ void build_graph(int current_node)
                         temp.dirn = dirn;
                         if (dirn != nodes[node].dirn) temp.dirsteps = 1;
                         else temp.dirsteps = nodes[node].dirsteps + 1;
+                        if (((visited_map[temp.x][temp.y] & (temp.dirn * table[temp.dirn, temp.dirsteps - 1])) == temp.dirn * table[temp.dirn, temp.dirsteps - 1])) break;
                         temp.cost = map[temp.y][temp.x];
                         temp.neighbours = new List<int>();
                         nodes.Add(temp);
+                        Console.WriteLine((nodes.Count - 1) + ":" + temp.x + "," + temp.y + " in " + temp.dirn);
                         nodes[node].neighbours.Add(nodes.Count - 1);
                         added = true;
                         break;
@@ -121,16 +129,21 @@ void build_graph(int current_node)
                         temp.dirn = dirn;
                         if (dirn != nodes[node].dirn) temp.dirsteps = 1;
                         else temp.dirsteps = nodes[node].dirsteps + 1;
+                        if (((visited_map[temp.x][temp.y] & (temp.dirn * table[temp.dirn, temp.dirsteps - 1])) == temp.dirn * table[temp.dirn, temp.dirsteps - 1])) break;
                         temp.cost = map[temp.y][temp.x];
                         temp.neighbours = new List<int>();
                         nodes.Add(temp);
+                        Console.WriteLine((nodes.Count-1) + ":" + temp.x + "," + temp.y + " in " + temp.dirn);
                         nodes[node].neighbours.Add(nodes.Count - 1);
                         added = true;
                         break;
                 }
             }
+            //Console.ReadLine();
         }
         current_node++;
+        if (current_node < nodes.Count) active_nodes = true;
+        else active_nodes = false;
     }
 }
 void P1()
@@ -163,21 +176,24 @@ void P1()
     nodes.Add(temp);
     build_graph(0);
     Dijkstra find_path= new Dijkstra();
-    int destination=0;
+    List<int> destination=new List<int>();
     graph = new int[nodes.Count, nodes.Count];
     for (int i=0; i<nodes.Count; i++)
     {
+        if ((nodes[i].y == map.Count - 1) && (nodes[i].x == map[0].Count - 1)) destination.Add(i);
         for (int j=0; j<nodes.Count; j++)
         {
             if (nodes[i].neighbours.Contains(j)) graph[i, j] = nodes[j].cost;
             else graph[i, j] = 0;
-            if ((nodes[i].y == map.Count - 1) && (nodes[i].x == map[0].Count - 1)) destination = i;
         }
         Console.WriteLine("Node " + i + " at " + nodes[i].x + "," + nodes[i].y);
     }
     find_path.V = nodes.Count;
     find_path.dijkstra(graph, 0);
-    Console.WriteLine(destination);
+    foreach (int dest in destination)
+    {
+        Console.WriteLine(dest + " : " + find_path.dist[dest]);
+    }
     Console.WriteLine(result);
     Console.ReadLine();
 }
