@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Versioning;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -19,6 +20,7 @@ namespace Day_17_Clumsy_Crucible
         // path tree
         public int V = 9;
         public int[] dist;
+        public int[] prev;
         int minDistance(int[] dist, bool[] sptSet)
         {
             // Initialize min value
@@ -54,6 +56,7 @@ namespace Day_17_Clumsy_Crucible
                 = new int[V]; // The output array. dist[i]
                               // will hold the shortest
                               // distance from src to i
+            prev = new int[V];
 
             // sptSet[i] will true if vertex
             // i is included in shortest path
@@ -97,11 +100,15 @@ namespace Day_17_Clumsy_Crucible
                     if (!sptSet[v] && graph[u, v] != 0
                         && dist[u] != int.MaxValue
                         && dist[u] + graph[u, v] < dist[v])
+                    {
                         dist[v] = dist[u] + graph[u, v];
+                        prev[v] = u;
+                    }
+                        
             }
 
             // print the constructed distance array
-            printSolution(dist);
+            //printSolution(dist);
         }
 
         //        // Driver's Code

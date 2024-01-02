@@ -47,18 +47,22 @@ void build_graph(int current_node)
     while (active_nodes) 
     {
         active_nodes = false;
+        if (current_node == 79)
+            Console.WriteLine("Debug here!");
         //for (int thisnode = 0; thisnode < nodes[current_node].neighbours.Count; thisnode++)
         foreach(int node in nodes[current_node].neighbours) 
         {
             //int node = nodes[current_node].neighbours[thisnode];
-            if ((visited_map[nodes[node].y][nodes[node].x] & (nodes[node].dirn * table[nodes[node].dirn, nodes[node].dirsteps-1]))== nodes[node].dirn * table[nodes[node].dirn,nodes[node].dirsteps - 1])
+            if ((visited_map[nodes[node].y][nodes[node].x]>0) && 
+                ((visited_map[nodes[node].y][nodes[node].x] & (/*nodes[node].dirn */ table[nodes[node].dirn, nodes[node].dirsteps-1]))== 
+                    /*nodes[node].dirn */ table[nodes[node].dirn,nodes[node].dirsteps - 1]))
             {
                 nodes[node].dirn = 0;
                 continue;
             }
             
             active_nodes = true;
-            visited_map[nodes[node].y][nodes[node].x] += nodes[node].dirn * table[nodes[node].dirn,nodes[node].dirsteps - 1];
+            visited_map[nodes[node].y][nodes[node].x] += /*nodes[node].dirn */ table[nodes[node].dirn,nodes[node].dirsteps - 1];
             List<int> dirns = new List<int>();
             dirns.Add(1); dirns.Add(2); dirns.Add(4); dirns.Add(8);
             switch (nodes[node].dirn)
@@ -190,9 +194,23 @@ void P1()
     }
     find_path.V = nodes.Count;
     find_path.dijkstra(graph, 0);
+    List<int> results = new List<int>();
     foreach (int dest in destination)
     {
-        Console.WriteLine(dest + " : " + find_path.dist[dest]);
+        results.Add(find_path.dist[dest]);
+        //Console.WriteLine(dest + " : " + find_path.dist[dest]);
+    }
+    int min = results.Min();
+    index = results.IndexOf(min);
+    int desti = destination[index];
+    x = nodes[desti].x;
+    y = nodes[desti].y;
+    while ((x!=0) || (y!=0))
+    {
+        Console.WriteLine(desti + ": " + x + "," + y);
+        desti = find_path.prev[desti];
+        x = nodes[desti].x;
+        y = nodes[desti].y;
     }
     Console.WriteLine(result);
     Console.ReadLine();
