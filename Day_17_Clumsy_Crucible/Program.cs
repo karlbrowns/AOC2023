@@ -4,7 +4,7 @@ using Day_17_Clumsy_Crucible;
 
 List<Nodes> nodes = new List<Nodes>();
 List<List<int>> map = new List<List<int>>();
-List<List<int>> visited_map = new List<List<int>>();
+List<List<Visited>> visited_map = new List<List<Visited>>();
 
 int[,] table = new int[9,4];
 int[,] graph;
@@ -47,22 +47,30 @@ void build_graph(int current_node)
     while (active_nodes) 
     {
         active_nodes = false;
-        if (current_node == 79)
+        if (current_node == 93)
             Console.WriteLine("Debug here!");
         //for (int thisnode = 0; thisnode < nodes[current_node].neighbours.Count; thisnode++)
         foreach(int node in nodes[current_node].neighbours) 
         {
             //int node = nodes[current_node].neighbours[thisnode];
-            if ((visited_map[nodes[node].y][nodes[node].x]>0) && 
-                ((visited_map[nodes[node].y][nodes[node].x] & (/*nodes[node].dirn */ table[nodes[node].dirn, nodes[node].dirsteps-1]))== 
+            if ((visited_map[nodes[node].y][nodes[node].x].dir_and_steps>0) && 
+                ((visited_map[nodes[node].y][nodes[node].x].dir_and_steps & (/*nodes[node].dirn */ table[nodes[node].dirn, nodes[node].dirsteps-1]))== 
                     /*nodes[node].dirn */ table[nodes[node].dirn,nodes[node].dirsteps - 1]))
             {
+                foreach (Neighbours ntemp in visited_map[nodes[node].y][nodes[node].x].neighbours)
+                {
+                    if ((ntemp.dir_and_steps & table[nodes[node].dirn, nodes[node].dirsteps-1]) == table[nodes[node].dirn, nodes[node].dirsteps - 1]) nodes[node].neighbours.Add(ntemp.node);
+                }
                 nodes[node].dirn = 0;
                 continue;
             }
             
             active_nodes = true;
-            visited_map[nodes[node].y][nodes[node].x] += /*nodes[node].dirn */ table[nodes[node].dirn,nodes[node].dirsteps - 1];
+            visited_map[nodes[node].y][nodes[node].x].dir_and_steps += /*nodes[node].dirn */ table[nodes[node].dirn,nodes[node].dirsteps - 1];
+            Neighbours tempn = new Neighbours();
+            tempn.dir_and_steps = table[nodes[node].dirn, nodes[node].dirsteps - 1];
+            tempn.node = node;
+            visited_map[nodes[node].y][nodes[node].x].neighbours.Add(tempn);
             List<int> dirns = new List<int>();
             dirns.Add(1); dirns.Add(2); dirns.Add(4); dirns.Add(8);
             switch (nodes[node].dirn)
@@ -88,7 +96,15 @@ void build_graph(int current_node)
                         temp.dirn = dirn;
                         if (dirn != nodes[node].dirn) temp.dirsteps = 1;
                         else temp.dirsteps = nodes[node].dirsteps + 1;
-                        if (((visited_map[temp.x][temp.y] & (temp.dirn * table[temp.dirn, temp.dirsteps - 1])) == temp.dirn * table[temp.dirn, temp.dirsteps - 1])) break;
+                        if (((visited_map[temp.x][temp.y].dir_and_steps & (table[temp.dirn, temp.dirsteps - 1])) == table[temp.dirn, temp.dirsteps - 1]))
+                        {
+                            foreach (Neighbours ntemp in visited_map[temp.y][temp.x].neighbours)
+                            {
+                                if ((ntemp.dir_and_steps & table[nodes[node].dirn, nodes[node].dirsteps-1]) == table[nodes[node].dirn, nodes[node].dirsteps - 1]) nodes[node].neighbours.Add(ntemp.node);
+                            }
+                            
+                            break;
+                        }
                         temp.cost = map[temp.y][temp.x];
                         temp.neighbours = new List<int>();
                         nodes.Add(temp);
@@ -103,7 +119,15 @@ void build_graph(int current_node)
                         temp.dirn = dirn;
                         if (dirn != nodes[node].dirn) temp.dirsteps = 1;
                         else temp.dirsteps = nodes[node].dirsteps + 1;
-                        if (((visited_map[temp.x][temp.y] & (temp.dirn * table[temp.dirn, temp.dirsteps - 1])) == temp.dirn * table[temp.dirn, temp.dirsteps - 1])) break;
+                        if (((visited_map[temp.x][temp.y].dir_and_steps & (table[temp.dirn, temp.dirsteps - 1])) == table[temp.dirn, temp.dirsteps - 1]))
+                        {
+                            foreach (Neighbours ntemp in visited_map[temp.y][temp.x].neighbours)
+                            {
+                                if ((ntemp.dir_and_steps & table[nodes[node].dirn, nodes[node].dirsteps - 1]) == table[nodes[node].dirn, nodes[node].dirsteps - 1]) nodes[node].neighbours.Add(ntemp.node);
+                            }
+
+                            break;
+                        }
                         temp.cost = map[temp.y][temp.x];
                         temp.neighbours = new List<int>();
                         nodes.Add(temp);
@@ -118,7 +142,15 @@ void build_graph(int current_node)
                         temp.dirn = dirn;
                         if (dirn != nodes[node].dirn) temp.dirsteps = 1;
                         else temp.dirsteps = nodes[node].dirsteps + 1;
-                        if (((visited_map[temp.x][temp.y] & (temp.dirn * table[temp.dirn, temp.dirsteps - 1])) == temp.dirn * table[temp.dirn, temp.dirsteps - 1])) break;
+                        if (((visited_map[temp.x][temp.y].dir_and_steps & (table[temp.dirn, temp.dirsteps - 1])) == table[temp.dirn, temp.dirsteps - 1]))
+                        {
+                            foreach (Neighbours ntemp in visited_map[temp.y][temp.x].neighbours)
+                            {
+                                if ((ntemp.dir_and_steps & table[nodes[node].dirn, nodes[node].dirsteps - 1]) == table[nodes[node].dirn, nodes[node].dirsteps - 1]) nodes[node].neighbours.Add(ntemp.node);
+                            }
+
+                            break;
+                        }
                         temp.cost = map[temp.y][temp.x];
                         temp.neighbours = new List<int>();
                         nodes.Add(temp);
@@ -133,7 +165,15 @@ void build_graph(int current_node)
                         temp.dirn = dirn;
                         if (dirn != nodes[node].dirn) temp.dirsteps = 1;
                         else temp.dirsteps = nodes[node].dirsteps + 1;
-                        if (((visited_map[temp.x][temp.y] & (temp.dirn * table[temp.dirn, temp.dirsteps - 1])) == temp.dirn * table[temp.dirn, temp.dirsteps - 1])) break;
+                        if (((visited_map[temp.x][temp.y].dir_and_steps & (table[temp.dirn, temp.dirsteps - 1])) == table[temp.dirn, temp.dirsteps - 1]))
+                        {
+                            foreach (Neighbours ntemp in visited_map[temp.y][temp.x].neighbours)
+                            {
+                                if ((ntemp.dir_and_steps & table[nodes[node].dirn, nodes[node].dirsteps - 1]) == table[nodes[node].dirn, nodes[node].dirsteps - 1]) nodes[node].neighbours.Add(ntemp.node);
+                            }
+
+                            break;
+                        }
                         temp.cost = map[temp.y][temp.x];
                         temp.neighbours = new List<int>();
                         nodes.Add(temp);
@@ -158,12 +198,15 @@ void P1()
     foreach (string line in System.IO.File.ReadLines(data))
     {
         map.Add(new List<int>());
-        visited_map.Add(new List<int>());
+        visited_map.Add(new List<Visited>());
         foreach (char c in line)
         {
             int ch = c - 0x30;
             map[index].Add(ch);
-            visited_map[index].Add(0);
+            Visited tempv = new Visited();
+            tempv.dir_and_steps = 0;
+            tempv.neighbours = new List<Neighbours>();
+            visited_map[index].Add(tempv);
         }
         index++;
     }
@@ -212,7 +255,7 @@ void P1()
         x = nodes[desti].x;
         y = nodes[desti].y;
     }
-    Console.WriteLine(result);
+    Console.WriteLine(min);
     Console.ReadLine();
 }
 
@@ -246,5 +289,17 @@ class Nodes
     public int dirn;
     public int dirsteps;
     public List<int> neighbours;
+}
+
+class Neighbours
+{
+    public int node;
+    public int dir_and_steps;
+}
+
+class Visited
+{
+    public int dir_and_steps;
+    public List<Neighbours> neighbours;
 }
 
