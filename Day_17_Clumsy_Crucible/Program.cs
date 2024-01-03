@@ -49,19 +49,22 @@ void build_graph(int current_node)
         active_nodes = false;
         if (current_node == 93)
             Console.WriteLine("Debug here!");
-        //for (int thisnode = 0; thisnode < nodes[current_node].neighbours.Count; thisnode++)
-        foreach(int node in nodes[current_node].neighbours) 
+        int limit = nodes[current_node].neighbours.Count;
+        for (int thisnode = 0; thisnode < limit ; thisnode++)
+        //foreach(int node in nodes[current_node].neighbours) 
         {
-            //int node = nodes[current_node].neighbours[thisnode];
+            int node = nodes[current_node].neighbours[thisnode];
             if ((visited_map[nodes[node].y][nodes[node].x].dir_and_steps>0) && 
                 ((visited_map[nodes[node].y][nodes[node].x].dir_and_steps & (/*nodes[node].dirn */ table[nodes[node].dirn, nodes[node].dirsteps-1]))== 
                     /*nodes[node].dirn */ table[nodes[node].dirn,nodes[node].dirsteps - 1]))
             {
                 foreach (Neighbours ntemp in visited_map[nodes[node].y][nodes[node].x].neighbours)
                 {
-                    if ((ntemp.dir_and_steps & table[nodes[node].dirn, nodes[node].dirsteps-1]) == table[nodes[node].dirn, nodes[node].dirsteps - 1]) nodes[node].neighbours.Add(ntemp.node);
+                    if ((ntemp.dir_and_steps & table[nodes[node].dirn, nodes[node].dirsteps-1]) == table[nodes[node].dirn, nodes[node].dirsteps - 1]) 
+                        nodes[current_node].neighbours.Add(ntemp.node);
                 }
-                nodes[node].dirn = 0;
+                //nodes[node].dirn = 0;
+                //nodes[current_node].neighbours.RemoveAt(thisnode);
                 continue;
             }
             
@@ -225,6 +228,14 @@ void P1()
     Dijkstra find_path= new Dijkstra();
     List<int> destination=new List<int>();
     graph = new int[nodes.Count, nodes.Count];
+//    for (int i = 0; i < nodes.Count; i++)
+//    {
+//        if (nodes[i].dirn == 0)
+//        {
+//            nodes.RemoveAt(i);
+//            i--;
+//        }
+//    }
     for (int i=0; i<nodes.Count; i++)
     {
         if ((nodes[i].y == map.Count - 1) && (nodes[i].x == map[0].Count - 1)) destination.Add(i);
