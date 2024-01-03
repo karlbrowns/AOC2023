@@ -49,17 +49,11 @@ void build_graph(int current_node)
     while (active_nodes) 
     {
         active_nodes = false;
-        if (current_node == 536)
-            Console.WriteLine("Debug here!");
         int limit = nodes[current_node].neighbours.Count;
         for (int thisnode = 0; thisnode < limit ; thisnode++)
         //foreach(int node in nodes[current_node].neighbours) 
         {
             int node = nodes[current_node].neighbours[thisnode];
-            if (node==536)
-            {
-                Console.WriteLine("Debug more here");
-            }
             if ((visited_map[nodes[node].y][nodes[node].x].dir_and_steps>0) && 
                 ((visited_map[nodes[node].y][nodes[node].x].dir_and_steps & (/*nodes[node].dirn */ table[nodes[node].dirn, nodes[node].dirsteps-1]))== 
                     /*nodes[node].dirn */ table[nodes[node].dirn,nodes[node].dirsteps - 1]))
@@ -91,7 +85,6 @@ void build_graph(int current_node)
                 case 0: dirns = new List<int>(); break;
             }
             if (nodes[node].dirsteps == 3) dirns.Remove(nodes[node].dirn);
-            Console.WriteLine("Neighbours of " + node);
             foreach (int dirn in dirns)
             {
                 temp = new Nodes();
@@ -119,7 +112,7 @@ void build_graph(int current_node)
                         temp.cost = map[temp.y][temp.x];
                         temp.neighbours = new List<int>();
                         nodes.Add(temp);
-                        Console.WriteLine((nodes.Count - 1) + ":" + temp.x + "," + temp.y + " in " + temp.dirn);
+                        //Console.WriteLine((nodes.Count - 1) + ":" + temp.x + "," + temp.y + " in " + temp.dirn);
                         nodes[node].neighbours.Add(nodes.Count - 1);
                         added = true;
                         break;
@@ -143,7 +136,7 @@ void build_graph(int current_node)
                         temp.cost = map[temp.y][temp.x];
                         temp.neighbours = new List<int>();
                         nodes.Add(temp);
-                        Console.WriteLine((nodes.Count - 1) + ":" + temp.x + "," + temp.y + " in " + temp.dirn);
+                        //Console.WriteLine((nodes.Count - 1) + ":" + temp.x + "," + temp.y + " in " + temp.dirn);
                         nodes[node].neighbours.Add(nodes.Count - 1);
                         added = true;
                         break;
@@ -167,7 +160,7 @@ void build_graph(int current_node)
                         temp.cost = map[temp.y][temp.x];
                         temp.neighbours = new List<int>();
                         nodes.Add(temp);
-                        Console.WriteLine((nodes.Count - 1) + ":" + temp.x + "," + temp.y + " in " + temp.dirn);
+                        //Console.WriteLine((nodes.Count - 1) + ":" + temp.x + "," + temp.y + " in " + temp.dirn);
                         nodes[node].neighbours.Add(nodes.Count - 1);
                         added = true;
                         break;
@@ -191,7 +184,7 @@ void build_graph(int current_node)
                         temp.cost = map[temp.y][temp.x];
                         temp.neighbours = new List<int>();
                         nodes.Add(temp);
-                        Console.WriteLine((nodes.Count-1) + ":" + temp.x + "," + temp.y + " in " + temp.dirn);
+                        //Console.WriteLine((nodes.Count-1) + ":" + temp.x + "," + temp.y + " in " + temp.dirn);
                         nodes[node].neighbours.Add(nodes.Count - 1);
                         added = true;
                         break;
@@ -208,7 +201,7 @@ void P1()
 {
     int result = 0;
     int index = 0;
-    String data = "inputtst.txt";
+    String data = "input.txt";
     foreach (string line in System.IO.File.ReadLines(data))
     {
         map.Add(new List<int>());
@@ -239,7 +232,7 @@ void P1()
     build_graph(0);
     Dijkstra find_path= new Dijkstra();
     List<int> destination=new List<int>();
-    graph = new int[nodes.Count, nodes.Count];
+//    graph = new int[nodes.Count, nodes.Count];
 //    for (int i = 0; i < nodes.Count; i++)
 //    {
 //        if (nodes[i].dirn == 0)
@@ -250,7 +243,7 @@ void P1()
 //    }
     for (int i=0; i<nodes.Count; i++)
     {
-//        if ((nodes[i].y == map.Count - 1) && (nodes[i].x == map[0].Count - 1)) destination.Add(i);
+        if ((nodes[i].y == map.Count - 1) && (nodes[i].x == map[0].Count - 1)) destination.Add(i);
 //        for (int j=0; j<nodes.Count; j++)
 //        {
 //            if (nodes[i].neighbours.Contains(j)) graph[i, j] = nodes[j].cost;
