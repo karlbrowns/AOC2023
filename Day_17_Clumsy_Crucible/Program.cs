@@ -47,13 +47,17 @@ void build_graph(int current_node)
     while (active_nodes) 
     {
         active_nodes = false;
-        if (current_node == 93)
+        if (current_node == 536)
             Console.WriteLine("Debug here!");
         int limit = nodes[current_node].neighbours.Count;
         for (int thisnode = 0; thisnode < limit ; thisnode++)
         //foreach(int node in nodes[current_node].neighbours) 
         {
             int node = nodes[current_node].neighbours[thisnode];
+            if (node==536)
+            {
+                Console.WriteLine("Debug more here");
+            }
             if ((visited_map[nodes[node].y][nodes[node].x].dir_and_steps>0) && 
                 ((visited_map[nodes[node].y][nodes[node].x].dir_and_steps & (/*nodes[node].dirn */ table[nodes[node].dirn, nodes[node].dirsteps-1]))== 
                     /*nodes[node].dirn */ table[nodes[node].dirn,nodes[node].dirsteps - 1]))
@@ -99,7 +103,7 @@ void build_graph(int current_node)
                         temp.dirn = dirn;
                         if (dirn != nodes[node].dirn) temp.dirsteps = 1;
                         else temp.dirsteps = nodes[node].dirsteps + 1;
-                        if (((visited_map[temp.x][temp.y].dir_and_steps & (table[temp.dirn, temp.dirsteps - 1])) == table[temp.dirn, temp.dirsteps - 1]))
+                        if (((visited_map[temp.y][temp.x].dir_and_steps & (table[temp.dirn, temp.dirsteps - 1])) == table[temp.dirn, temp.dirsteps - 1]))
                         {
                             foreach (Neighbours ntemp in visited_map[temp.y][temp.x].neighbours)
                             {
@@ -123,7 +127,7 @@ void build_graph(int current_node)
                         temp.dirn = dirn;
                         if (dirn != nodes[node].dirn) temp.dirsteps = 1;
                         else temp.dirsteps = nodes[node].dirsteps + 1;
-                        if (((visited_map[temp.x][temp.y].dir_and_steps & (table[temp.dirn, temp.dirsteps - 1])) == table[temp.dirn, temp.dirsteps - 1]))
+                        if (((visited_map[temp.y][temp.x].dir_and_steps & (table[temp.dirn, temp.dirsteps - 1])) == table[temp.dirn, temp.dirsteps - 1]))
                         {
                             foreach (Neighbours ntemp in visited_map[temp.y][temp.x].neighbours)
                             {
@@ -147,7 +151,7 @@ void build_graph(int current_node)
                         temp.dirn = dirn;
                         if (dirn != nodes[node].dirn) temp.dirsteps = 1;
                         else temp.dirsteps = nodes[node].dirsteps + 1;
-                        if (((visited_map[temp.x][temp.y].dir_and_steps & (table[temp.dirn, temp.dirsteps - 1])) == table[temp.dirn, temp.dirsteps - 1]))
+                        if (((visited_map[temp.y][temp.x].dir_and_steps & (table[temp.dirn, temp.dirsteps - 1])) == table[temp.dirn, temp.dirsteps - 1]))
                         {
                             foreach (Neighbours ntemp in visited_map[temp.y][temp.x].neighbours)
                             {
@@ -171,7 +175,7 @@ void build_graph(int current_node)
                         temp.dirn = dirn;
                         if (dirn != nodes[node].dirn) temp.dirsteps = 1;
                         else temp.dirsteps = nodes[node].dirsteps + 1;
-                        if (((visited_map[temp.x][temp.y].dir_and_steps & (table[temp.dirn, temp.dirsteps - 1])) == table[temp.dirn, temp.dirsteps - 1]))
+                        if (((visited_map[temp.y][temp.x].dir_and_steps & (table[temp.dirn, temp.dirsteps - 1])) == table[temp.dirn, temp.dirsteps - 1]))
                         {
                             foreach (Neighbours ntemp in visited_map[temp.y][temp.x].neighbours)
                             {
@@ -201,7 +205,7 @@ void P1()
 {
     int result = 0;
     int index = 0;
-    String data = "inputtst.txt";
+    String data = "input.txt";
     foreach (string line in System.IO.File.ReadLines(data))
     {
         map.Add(new List<int>());
