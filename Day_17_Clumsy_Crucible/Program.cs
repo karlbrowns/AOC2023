@@ -103,7 +103,8 @@ void build_graph(int current_node)
                         {
                             foreach (Neighbours ntemp in visited_map[temp.y][temp.x].neighbours)
                             {
-                                if ((ntemp.dir_and_steps & table[nodes[node].dirn, nodes[node].dirsteps-1]) == table[nodes[node].dirn, nodes[node].dirsteps - 1]) nodes[node].neighbours.Add(ntemp.node);
+                                if ((ntemp.dir_and_steps & table[temp.dirn, temp.dirsteps-1]) == table[temp.dirn, temp.dirsteps - 1]) 
+                                    nodes[node].neighbours.Add(ntemp.node);
                             }
                             
                             break;
@@ -126,7 +127,8 @@ void build_graph(int current_node)
                         {
                             foreach (Neighbours ntemp in visited_map[temp.y][temp.x].neighbours)
                             {
-                                if ((ntemp.dir_and_steps & table[nodes[node].dirn, nodes[node].dirsteps - 1]) == table[nodes[node].dirn, nodes[node].dirsteps - 1]) nodes[node].neighbours.Add(ntemp.node);
+                                if ((ntemp.dir_and_steps & table[temp.dirn, temp.dirsteps - 1]) == table[temp.dirn, temp.dirsteps - 1])
+                                    nodes[node].neighbours.Add(ntemp.node);
                             }
 
                             break;
@@ -149,7 +151,8 @@ void build_graph(int current_node)
                         {
                             foreach (Neighbours ntemp in visited_map[temp.y][temp.x].neighbours)
                             {
-                                if ((ntemp.dir_and_steps & table[nodes[node].dirn, nodes[node].dirsteps - 1]) == table[nodes[node].dirn, nodes[node].dirsteps - 1]) nodes[node].neighbours.Add(ntemp.node);
+                                if ((ntemp.dir_and_steps & table[temp.dirn, temp.dirsteps - 1]) == table[temp.dirn, temp.dirsteps - 1])
+                                    nodes[node].neighbours.Add(ntemp.node);
                             }
 
                             break;
@@ -172,7 +175,8 @@ void build_graph(int current_node)
                         {
                             foreach (Neighbours ntemp in visited_map[temp.y][temp.x].neighbours)
                             {
-                                if ((ntemp.dir_and_steps & table[nodes[node].dirn, nodes[node].dirsteps - 1]) == table[nodes[node].dirn, nodes[node].dirsteps - 1]) nodes[node].neighbours.Add(ntemp.node);
+                                if ((ntemp.dir_and_steps & table[temp.dirn, temp.dirsteps - 1]) == table[temp.dirn, temp.dirsteps - 1])
+                                    nodes[node].neighbours.Add(ntemp.node);
                             }
 
                             break;
