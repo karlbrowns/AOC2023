@@ -21,13 +21,13 @@ namespace Day_17_Clumsy_Crucible
         public int V = 9;
         public int[] dist;
         public int[] prev;
-        int minDistance(int[] dist, bool[] sptSet)
+        int minDistance(int[] dist, List<int> sptSet)
         {
             // Initialize min value
             int min = int.MaxValue, min_index = -1;
 
             for (int v = 0; v < V; v++)
-                if (sptSet[v] == false && dist[v] <= min)
+                if (sptSet.Contains(v) == false && dist[v] <= min)
                 {
                     min = dist[v];
                     min_index = v;
@@ -50,7 +50,7 @@ namespace Day_17_Clumsy_Crucible
         // single source shortest path algorithm
         // for a graph represented using adjacency
         // matrix representation
-        public void dijkstra(int[,] graph, int src)
+        public void dijkstra(List<Nodes> graph, int src)
         {
             dist
                 = new int[V]; // The output array. dist[i]
@@ -62,16 +62,17 @@ namespace Day_17_Clumsy_Crucible
             // i is included in shortest path
             // tree or shortest distance from
             // src to i is finalized
-            bool[] sptSet = new bool[V];
+            List<int> sptSet = new List<int>();
 
             // Initialize all distances as
             // INFINITE and stpSet[] as false
             for (int i = 0; i < V; i++)
             {
                 dist[i] = int.MaxValue;
-                sptSet[i] = false;
+                //sptSet[i] = false;
             }
-
+            sptSet.Add(src);
+            dist[src] = 0;
             // Distance of source vertex
             // from itself is always 0
             dist[src] = 0;
@@ -86,25 +87,30 @@ namespace Day_17_Clumsy_Crucible
                 int u = minDistance(dist, sptSet);
 
                 // Mark the picked vertex as processed
-                sptSet[u] = true;
+                sptSet.Add(u);
 
                 // Update dist value of the adjacent
                 // vertices of the picked vertex.
                 for (int v = 0; v < V; v++)
+                {
 
                     // Update dist[v] only if is not in
                     // sptSet, there is an edge from u
                     // to v, and total weight of path
                     // from src to v through u is smaller
                     // than current value of dist[v]
-                    if (!sptSet[v] && graph[u, v] != 0
-                        && dist[u] != int.MaxValue
-                        && dist[u] + graph[u, v] < dist[v])
+                    if (!sptSet.Contains(v))
                     {
-                        dist[v] = dist[u] + graph[u, v];
-                        prev[v] = u;
+                        for (int j = 0; j < graph[u].neighbours.Count; j++)
+                        {
+                            if ((graph[u].neighbours.Contains(v)) && (dist[u] + graph[v].cost < dist[v]))
+                            {
+                                dist[v] = dist[u] + graph[v].cost;
+                                prev[v] = u;
+                            }
+                        }
                     }
-                        
+                }
             }
 
             // print the constructed distance array

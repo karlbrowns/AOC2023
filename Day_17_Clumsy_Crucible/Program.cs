@@ -32,6 +32,7 @@ void build_graph(int current_node)
     temp.dirsteps = 1;
     temp.cost = map[temp.y][temp.x];
     temp.neighbours = new List<int>();
+    temp.dist = int.MaxValue;
     nodes.Add(temp);
     nodes[current_node].neighbours.Add(nodes.Count - 1);
     temp = new Nodes();
@@ -40,6 +41,7 @@ void build_graph(int current_node)
     temp.dirn = 4;
     temp.dirsteps = 1;
     temp.cost = map[temp.y][temp.x];
+    temp.dist = int.MaxValue;
     temp.neighbours = new List<int>();
     nodes.Add(temp);
     nodes[current_node].neighbours.Add(nodes.Count - 1);
@@ -93,6 +95,7 @@ void build_graph(int current_node)
             foreach (int dirn in dirns)
             {
                 temp = new Nodes();
+                temp.dist = int.MaxValue;
                 bool added = false;
                 switch (dirn)
                 {
@@ -205,7 +208,7 @@ void P1()
 {
     int result = 0;
     int index = 0;
-    String data = "input.txt";
+    String data = "inputtst.txt";
     foreach (string line in System.IO.File.ReadLines(data))
     {
         map.Add(new List<int>());
@@ -231,6 +234,7 @@ void P1()
     temp.dirn = 0;
     temp.dirsteps = 0;
     temp.neighbours = new List<int>();
+    temp.dist = int.MaxValue;
     nodes.Add(temp);
     build_graph(0);
     Dijkstra find_path= new Dijkstra();
@@ -246,16 +250,16 @@ void P1()
 //    }
     for (int i=0; i<nodes.Count; i++)
     {
-        if ((nodes[i].y == map.Count - 1) && (nodes[i].x == map[0].Count - 1)) destination.Add(i);
-        for (int j=0; j<nodes.Count; j++)
-        {
-            if (nodes[i].neighbours.Contains(j)) graph[i, j] = nodes[j].cost;
-            else graph[i, j] = 0;
-        }
-        Console.WriteLine("Node " + i + " at " + nodes[i].x + "," + nodes[i].y);
+//        if ((nodes[i].y == map.Count - 1) && (nodes[i].x == map[0].Count - 1)) destination.Add(i);
+//        for (int j=0; j<nodes.Count; j++)
+//        {
+//            if (nodes[i].neighbours.Contains(j)) graph[i, j] = nodes[j].cost;
+//            else graph[i, j] = 0;
+//        }
+//        Console.WriteLine("Node " + i + " at " + nodes[i].x + "," + nodes[i].y);
     }
     find_path.V = nodes.Count;
-    find_path.dijkstra(graph, 0);
+    find_path.dijkstra(nodes, 0);
     List<int> results = new List<int>();
     foreach (int dest in destination)
     {
@@ -307,6 +311,7 @@ class Nodes
     public int cost;
     public int dirn;
     public int dirsteps;
+    public int dist;
     public List<int> neighbours;
 }
 
