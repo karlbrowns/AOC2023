@@ -19,7 +19,7 @@ namespace Day_17_Clumsy_Crucible
         // not yet included in shortest
         // path tree
         public int V = 9;
-        public int[] dist;
+        public Dictionary<int, int> dist;
         public int[] prev;
         //        int minDistance(int[] dist, bool[] sptSet)
         //        {
@@ -36,13 +36,13 @@ namespace Day_17_Clumsy_Crucible
         //            return min_index;
         //        }
 
-        int minDistance(int[] dist, List<int> sptSet)
+        int minDistance(Dictionary<int, int> dist, List<int> sptSet)
         {
             // Initialize min value
             int min = int.MaxValue, min_index = -1;
 
-            for (int v = 0; v < V; v++)
-                if (sptSet.Contains(v) == false && dist[v] <= min)
+            foreach (int v in dist.Keys)
+                if (sptSet.Contains(v) == false && dist[v]<=min)
                 {
                     min = dist[v];
                     min_index = v;
@@ -68,10 +68,11 @@ namespace Day_17_Clumsy_Crucible
         public void dijkstra(List<Nodes> graph, int src)
         //public void dijkstra(int[,] graph, int src)
         {
-            dist
-                = new int[V]; // The output array. dist[i]
-                              // will hold the shortest
-                              // distance from src to i
+            //dist
+            //    = new int[V]; // The output array. dist[i]
+            // will hold the shortest
+            // distance from src to i
+            dist = new Dictionary<int, int>();
             prev = new int[V];
 
             // sptSet[i] will true if vertex
@@ -83,15 +84,15 @@ namespace Day_17_Clumsy_Crucible
 
             // Initialize all distances as
             // INFINITE and stpSet[] as false
-            for (int i = 0; i < V; i++)
-            {
-                dist[i] = int.MaxValue;
-                //sptSet[i] = false;
-            }
+            //for (int i = 0; i < V; i++)
+            //{
+            //    dist[i] = int.MaxValue;
+            //    //sptSet[i] = false;
+            //}
             //sptSet.Add(src) = true;
             // Distance of source vertex
             // from itself is always 0
-            dist[src] = 0;
+            dist.Add(src, 0);
 
             // Find shortest path for all vertices
             for (int count = 0; count < V - 1; count++)
@@ -117,9 +118,17 @@ namespace Day_17_Clumsy_Crucible
                     // than current value of dist[v]
                     if (!sptSet.Contains(v))
                     {
-                        if (dist[u] + graph[v].cost < dist[v])
+                        if (dist.ContainsKey(v))
                         {
-                            dist[v] = dist[u] + graph[v].cost;
+                            if (dist[u] + graph[v].cost < dist[v])
+                            {
+                                dist[v] = dist[u] + graph[v].cost;
+                                prev[v] = u;
+                            }
+                        }
+                        else
+                        {
+                            dist.Add(v, dist[u] + graph[v].cost);
                             prev[v] = u;
                         }
                     }
