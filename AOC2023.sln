@@ -41,6 +41,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Day_17_Clumsy_Crucible", "D
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Day_18_Lavaduct_Lagoon", "Day_18_Lavaduct_Lagoon\Day_18_Lavaduct_Lagoon.csproj", "{E5369BDB-C65A-47E1-BE9B-1976E99D6A19}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Day_19_Aplenty", "Day_19_Aplenty\Day_19_Aplenty.csproj", "{AAFAC46E-E73D-4382-B0F1-B149399589AA}"
+EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0F52F131-10CC-4B30-BE88-1129B42C62D1}"
 	ProjectSection(SolutionItems) = preProject
 		new_project.py = new_project.py
@@ -129,6 +131,10 @@ Global
 		{E5369BDB-C65A-47E1-BE9B-1976E99D6A19}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E5369BDB-C65A-47E1-BE9B-1976E99D6A19}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E5369BDB-C65A-47E1-BE9B-1976E99D6A19}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AAFAC46E-E73D-4382-B0F1-B149399589AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AAFAC46E-E73D-4382-B0F1-B149399589AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AAFAC46E-E73D-4382-B0F1-B149399589AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AAFAC46E-E73D-4382-B0F1-B149399589AA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
