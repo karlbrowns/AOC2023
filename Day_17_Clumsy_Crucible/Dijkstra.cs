@@ -36,18 +36,20 @@ namespace Day_17_Clumsy_Crucible
         //            return min_index;
         //        }
 
-        int minDistance(Dictionary<int, int> dist, List<int> sptSet)
+        int minDistance(Dictionary<int, int> dist, bool[] sptSet)
         {
             // Initialize min value
             int min = int.MaxValue, min_index = -1;
 
-            foreach (int v in dist.Keys)
-                if (sptSet.Contains(v) == false && dist[v]<=min)
+            foreach (var kvp in dist) {
+                int v = kvp.Key;
+                int v_dist = kvp.Value;
+                if (!sptSet[v] && v_dist <= min)
                 {
-                    min = dist[v];
+                    min = v_dist;
                     min_index = v;
                 }
-
+            }
             return min_index;
         }
 
@@ -79,8 +81,8 @@ namespace Day_17_Clumsy_Crucible
             // i is included in shortest path
             // tree or shortest distance from
             // src to i is finalized
-            List<int> sptSet = new List<int>();
-            //bool[] sptSet = new bool[V];
+            //List<int> sptSet = new List<int>();
+            bool[] sptSet = new bool[V];
 
             // Initialize all distances as
             // INFINITE and stpSet[] as false
@@ -104,8 +106,8 @@ namespace Day_17_Clumsy_Crucible
                 int u = minDistance(dist, sptSet);
 
                 // Mark the picked vertex as processed
-                sptSet.Add(u);
-                if ((sptSet.Count % 1000) == 0) Console.Write('.');
+                sptSet[u] = true;
+                if ((count % 1000) == 0) Console.Write('.');
                 // Update dist value of the adjacent
                 // vertices of the picked vertex.
                 foreach (int v in graph[u].neighbours) 
@@ -116,7 +118,7 @@ namespace Day_17_Clumsy_Crucible
                     // to v, and total weight of path
                     // from src to v through u is smaller
                     // than current value of dist[v]
-                    if (!sptSet.Contains(v))
+                    if (!sptSet[v])
                     {
                         if (dist.ContainsKey(v))
                         {
