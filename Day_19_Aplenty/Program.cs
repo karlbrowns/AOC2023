@@ -157,8 +157,142 @@ void P2()
     int result = 0;
     int index = 0;
     String data = "input.txt";
+    string delim = "{},=";
+    int start = -1;
+    char[] delims = delim.ToCharArray();
+    List<Workflow> workflows = new List<Workflow>();
+    Dictionary<string,List<Conditions>> dworkflows = new Dictionary<string,List<Conditions>>();
+    List<Part> Parts = new List<Part>();
+    string[] parts;
     foreach (string line in System.IO.File.ReadLines(data))
     {
+        if (line.Length == 0)
+        {
+            index++;
+            continue;
+        }
+        switch (index)
+        {
+            case 0:
+                parts = line.Split(delims, StringSplitOptions.RemoveEmptyEntries);
+                if (parts.Length > 0)
+                {
+                    workflows.Add(new Workflow(parts[0]));
+                    //if (parts[0] == "in") start = workflows.Count - 1;
+                    foreach (string part in parts.Skip(1)) // we don't want the name - we've already got that.
+                    {
+                        char t = part[0];
+                        int it = 0;
+                        int comp = 0;
+                        switch (t)
+                        {
+                            case 'x': { it = 1; break; }
+                            case 'm': { it = 2; break; }
+                            case 'a': { it = 3; break; }
+                            case 's': { it = 4; break; }
+                            case 'A': { it = -1; break; }
+                            case 'R': { it = -2; break; }
+                        }
+                        if (it >= 0)
+                        {
+                            t = part[1];
+                            if (t == '>') comp = 1;
+                            else if (t == '<') comp = 0;
+                            else comp = -1;
+                            if (comp < 0)
+                            {
+                                workflows.Last().conditions.Add(new Conditions(0, 0, 0, 0, part, ' '));
+                            }
+                            else
+                            {
+                                string[] subparts = part[2..].Split(':', StringSplitOptions.RemoveEmptyEntries);
+                                int value = int.Parse(subparts[0]);
+                                int idest = 0;
+                                if (subparts[1] == "A") idest = 2;
+                                if (subparts[1] == "R") idest = 1;
+                                Conditions c = new Conditions(it, comp, value, idest, subparts[1], t);
+
+                                workflows.Last().conditions.Add(c);
+                            }
+                        }
+                        else
+                        {
+                            workflows.Last().conditions.Add(new Conditions(it, 0, 0, it + 3, part, t));
+
+                        }
+                    }
+                    dworkflows.Add(workflows.Last().name, workflows.Last().conditions);
+
+                }
+                break;
+            case 1:
+                break;
+
+
+        }
+    }
+    int w = start;
+    string next = "in";
+    bool reject = false;
+    bool accept = false;
+    List<Part> partials = new List<Part>();
+    List<bool> done = new List<bool>();
+    while (!reject && !accept)
+    {
+        List<Conditions> conds = dworkflows[next];
+        foreach (Conditions c in conds)
+        {
+            bool test = false;
+            if (c.itype > 0)
+            {
+                int lt = c.comp;
+                int val = c.value;
+                partials.Add(new Part(4000, 4000, 4000, 4000));
+
+                if (lt == 0) test = comp < val; else test = comp > val;
+                if (test)
+                {
+                    next = c.destination;
+                    if (c.idest == 1)
+                    {
+                        reject = true;
+                        break;
+                    }
+                    else if (c.idest == 2)
+                    {
+                        accept = true;
+                        break;
+                    }
+                    break;
+                }
+                else continue;
+            }
+            if (c.idest == 1)
+            {
+                reject = true;
+                break;
+            }
+            if (c.idest == 2)
+            {
+                accept = true;
+                break;
+            }
+            next = c.destination;
+
+        }
+        if (!accept && !reject)
+        {
+            if (next != null)
+            {
+                w = 0;
+                foreach (Workflow wki in workflows)
+                {
+                    if (wki.name == next) break;
+                    w++;
+                }
+
+            }
+        }
     }
     Console.WriteLine(result);
     Console.ReadLine();
@@ -217,6 +351,10 @@ class Part
     public int sum()
     {
         return x + m + a + s;
+    }
+    public long mult()
+    {
+        return (long)x * (long)m * (long)a * (long)s;
     }
     public Part(int x, int m, int a, int s)
     {

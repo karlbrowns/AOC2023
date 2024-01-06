@@ -43,6 +43,18 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Day_18_Lavaduct_Lagoon", "D
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Day_19_Aplenty", "Day_19_Aplenty\Day_19_Aplenty.csproj", "{AAFAC46E-E73D-4382-B0F1-B149399589AA}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Day_20_Pulse_Propagation", "Day_20_Pulse_Propagation\Day_20_Pulse_Propagation.csproj", "{5B24C27A-ED50-48AC-BBBC-9A05664BDBFD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Day_21_Step_Counter", "Day_21_Step_Counter\Day_21_Step_Counter.csproj", "{AEB574E7-1316-487A-9A04-52E7C30BA9C8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Day_22_Sand_Slabs", "Day_22_Sand_Slabs\Day_22_Sand_Slabs.csproj", "{9F861642-9443-4D7F-B6F5-4F1664B6904D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Day_23_A_Long_Walk", "Day_23_A_Long_Walk\Day_23_A_Long_Walk.csproj", "{7A0CF9AF-A7F0-4479-B059-93F25674C6A8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Day_24_Never_Tell_Me_The_Odds", "Day_24_Never_Tell_Me_The_Odds\Day_24_Never_Tell_Me_The_Odds.csproj", "{5092472E-4CB0-4D2C-A163-82B380047383}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Day_25_Snowverload", "Day_25_Snowverload\Day_25_Snowverload.csproj", "{31A44750-8E38-46FA-85B5-BFE328B909A3}"
+EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0F52F131-10CC-4B30-BE88-1129B42C62D1}"
 	ProjectSection(SolutionItems) = preProject
 		new_project.py = new_project.py
