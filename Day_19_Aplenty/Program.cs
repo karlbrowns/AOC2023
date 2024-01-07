@@ -235,7 +235,7 @@ void P2()
     string next = "in";
     bool reject = false;
     bool accept = false;
-    List<Part> partials = new List<Part>();
+    List<Part2> partials = new List<Part2>();
     List<bool> done = new List<bool>();
     while (!reject && !accept)
     {
@@ -247,7 +247,7 @@ void P2()
             {
                 int lt = c.comp;
                 int val = c.value;
-                partials.Add(new Part(4000, 4000, 4000, 4000));
+                partials.Add(new Part2(c.destination));
 
                 if (lt == 0) test = comp < val; else test = comp > val;
                 if (test)
@@ -362,5 +362,39 @@ class Part
         this.m = m;
         this.a = a;
         this.s = s;
+    }
+}
+
+class Part2
+{
+    public int maxx;
+    public int maxm;
+    public int maxa;
+    public int maxs;
+    public int minx;
+    public int minm;
+    public int mina;
+    public int mins;
+    string dest;
+
+    public int sum()
+    {
+        return x + m + a + s;
+    }
+    public long mult()
+    {
+        return (long)(maxx-minx) * (long)(maxm - minm) * (long)(maxa-mina) * (long)(maxs-mins);
+    }
+    public Part2(string dest)
+    {
+        this.dest = dest;
+        minx = 1;
+        minm = 1;
+        mina = 1;
+        mins = 1;
+        maxx = 4000;
+        maxm = 4000;
+        maxa = 4000;
+        maxs = 4000;
     }
 }
