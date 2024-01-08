@@ -1,5 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 using System.Diagnostics;
+using System.ComponentModel.DataAnnotations;
 
 void P1()
 {
@@ -149,14 +150,14 @@ void P1()
         if (accept) result += curpart.sum();
     }
     Console.WriteLine(result);
-    Console.ReadLine();
+    //Console.ReadLine();
 }
 
 void P2()
 {
-    int result = 0;
+    long result = 0;
     int index = 0;
-    String data = "input.txt";
+    String data = "inputtst.txt";
     string delim = "{},=";
     int start = -1;
     char[] delims = delim.ToCharArray();
@@ -236,69 +237,120 @@ void P2()
     bool reject = false;
     bool accept = false;
     Queue<Part2> partials = new Queue<Part2>();
+    List<Part2> results = new List<Part2>();
     List<bool> done = new List<bool>();
-    while (!reject && !accept)
+    //while (!reject && !accept)
     {
-        partials.Enqueue(new Part2("next"));
+        partials.Enqueue(new Part2("in"));
         while (partials.Count>0)
         {
             Part2 current = partials.Dequeue();
             List<Conditions> conds = dworkflows[current.dest];
-            foreach (Conditions c in conds)
+            int cond_count = current.nextcond;
+            Conditions c = conds[cond_count];
             {
-                bool test = false;
+                cond_count++;
                 if (c.itype > 0)
                 {
                     int lt = c.comp;
                     int val = c.value;
                     //partials.Enqueue(new Part2(c.destination));
-                    
-                    if (lt == 0) test = comp < val; else test = comp > val;
-                    if (test)
+                    Part2 nextpart = new Part2("", current);
+                    switch (c.itype)
                     {
-                        next = c.destination;
-                        if (c.idest == 1)
-                        {
-                            reject = true;
+                        case 1:
+                            if (lt == 0)
+                            {
+                                current.maxx = val - 1;
+                                nextpart.minx = val;
+                            }
+                            else
+                            {
+                                current.minx = val + 1;
+                                nextpart.maxx = val;
+                            }
                             break;
-                        }
-                        else if (c.idest == 2)
-                        {
-                            accept = true;
+                        case 2:
+                            if (lt == 0)
+                            {
+                                current.maxm = val - 1;
+                                nextpart.minm = val;
+                            }
+                            else
+                            {
+                                current.minm = val + 1;
+                                nextpart.maxm = val;
+                            }
                             break;
-                        }
-                        break;
+                        case 3:
+                            if (lt == 0)
+                            {
+                                current.maxa = val - 1;
+                                nextpart.mina = val;
+                            }
+                            else
+                            {
+                                current.mina = val + 1;
+                                nextpart.maxa = val;
+                            }
+                            break;
+                        case 4:
+                            if (lt == 0)
+                            {
+                                current.maxs = val - 1;
+                                nextpart.mins = val;
+                            }
+                            else
+                            {
+                                current.mins = val + 1;
+                                nextpart.maxs = val;
+                            }
+                            break;
                     }
-                    else continue;
+                    if (c.idest == 2)
+                    {
+                        results.Add(current);
+                        if (c.type > 0)
+                        {
+                            nextpart.dest = current.dest;
+                            nextpart.nextcond = cond_count;
+                            partials.Enqueue(nextpart);
+                        }
+                    }
+                    else if (c.idest == 0)
+                    {
+                        nextpart.dest = current.dest;
+                        current.dest = c.destination;
+                        current.nextcond = 0;
+                        partials.Enqueue(current);
+                        nextpart.nextcond = cond_count;
+                        partials.Enqueue(nextpart);
+                        cond_count++;
+                    }
+                    else if (c.idest == 1)
+                    {
+                        nextpart.nextcond = cond_count;
+                        nextpart.dest = current.dest;
+                        partials.Enqueue(nextpart);
+                    }
                 }
-                if (c.idest == 1)
+                else if (c.itype==0) 
                 {
-                    reject = true;
-                    break;
+                    current.dest = c.destination;
+                    current.nextcond = 0;
+                    partials.Enqueue(current);
                 }
-                if (c.idest == 2)
+                else if (c.type==-1)
                 {
-                    accept = true;
-                    break;
+                    results.Add(current);
                 }
-                next = c.destination;
-
             }
 
         }
-        if (!accept && !reject)
-        {
-            if (next != null)
-            {
-                w = 0;
-                foreach (Workflow wki in workflows)
-                {
-                    if (wki.name == next) break;
-                    w++;
-                }
-
-            }
-        }
+    }
+    foreach (Part2 p in results)
+    {
+        result += p.mult();
     }
     Console.WriteLine(result);
     Console.ReadLine();
@@ -381,15 +433,12 @@ class Part2
     public int minm;
     public int mina;
     public int mins;
-    string dest;
+    public int nextcond;
+    public string dest;
 
-    public int sum()
-    {
-        return x + m + a + s;
-    }
     public long mult()
     {
-        return (long)(maxx-minx) * (long)(maxm - minm) * (long)(maxa-mina) * (long)(maxs-mins);
+        return (long)(maxx-minx+1) * (long)(maxm - minm+1) * (long)(maxa-mina+1) * (long)(maxs-mins+1);
     }
     public Part2(string dest)
     {
@@ -402,5 +451,19 @@ class Part2
         maxm = 4000;
         maxa = 4000;
         maxs = 4000;
+        nextcond = 0;
+    }
+    public Part2(string dest, Part2 part)
+    {
+        this.dest = dest;
+        minx = part.minx;
+        minm = part.minm;
+        mina = part.mina;
+        mins = part.mins;
+        maxx = part.maxx;
+        maxm = part.maxm;
+        maxa = part.maxa;
+        maxs = part.maxs;
+        nextcond = 0;
     }
 }
