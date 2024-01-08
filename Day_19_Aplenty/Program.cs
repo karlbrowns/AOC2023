@@ -235,49 +235,55 @@ void P2()
     string next = "in";
     bool reject = false;
     bool accept = false;
-    List<Part2> partials = new List<Part2>();
+    Queue<Part2> partials = new Queue<Part2>();
     List<bool> done = new List<bool>();
     while (!reject && !accept)
     {
-        List<Conditions> conds = dworkflows[next];
-        foreach (Conditions c in conds)
+        partials.Enqueue(new Part2("next"));
+        while (partials.Count>0)
         {
-            bool test = false;
-            if (c.itype > 0)
+            Part2 current = partials.Dequeue();
+            List<Conditions> conds = dworkflows[current.dest];
+            foreach (Conditions c in conds)
             {
-                int lt = c.comp;
-                int val = c.value;
-                partials.Add(new Part2(c.destination));
-
-                if (lt == 0) test = comp < val; else test = comp > val;
-                if (test)
+                bool test = false;
+                if (c.itype > 0)
                 {
-                    next = c.destination;
-                    if (c.idest == 1)
+                    int lt = c.comp;
+                    int val = c.value;
+                    //partials.Enqueue(new Part2(c.destination));
+                    
+                    if (lt == 0) test = comp < val; else test = comp > val;
+                    if (test)
                     {
-                        reject = true;
+                        next = c.destination;
+                        if (c.idest == 1)
+                        {
+                            reject = true;
+                            break;
+                        }
+                        else if (c.idest == 2)
+                        {
+                            accept = true;
+                            break;
+                        }
                         break;
                     }
-                    else if (c.idest == 2)
-                    {
-                        accept = true;
-                        break;
-                    }
+                    else continue;
+                }
+                if (c.idest == 1)
+                {
+                    reject = true;
                     break;
                 }
-                else continue;
+                if (c.idest == 2)
+                {
+                    accept = true;
+                    break;
+                }
+                next = c.destination;
+
             }
-            if (c.idest == 1)
-            {
-                reject = true;
-                break;
-            }
-            if (c.idest == 2)
-            {
-                accept = true;
-                break;
-            }
-            next = c.destination;
 
         }
         if (!accept && !reject)
