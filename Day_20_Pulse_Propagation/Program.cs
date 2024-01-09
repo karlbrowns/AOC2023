@@ -5,11 +5,12 @@ void P1()
 {
     int result = 0;
     int index = 0;
-    String data = "inputtst.txt";
+    String data = "input.txt";
     char[] delims = { '-', '>', ',',' ' };
     Dictionary<string, Module> modules = new Dictionary<string, Module>();
     Module button = new Module("button", 1);
     modules.Add("button", button);
+    modules["button"].outputs.Add("broadcaster");
     foreach (string line in System.IO.File.ReadLines(data))
     {
         string[] parts = line.Split(delims,StringSplitOptions.RemoveEmptyEntries);
@@ -32,13 +33,77 @@ void P1()
             modules.Add(name, temp);
         }
     }
+    List<string> outputs = new List<string>();
     foreach (Module m in modules.Values)
     {
         foreach (string d in m.outputs)
         {
-            modules[d].inputs.Add(m.name);  // create the bijection
+            if (!modules.ContainsKey(d)) outputs.Add(d);
         }
     }
+    foreach (string d in outputs)
+    {
+        modules.Add(d, new Module(d, 0));
+    }
+    foreach (Module m in modules.Values)
+    {
+        foreach (string d in m.outputs)
+        {
+            if (!modules.ContainsKey(d))
+            {
+                modules.Add(d, new Module(d, 0));
+            }
+            modules[d].inputs.Add(m.name);  // create the bijection
+            modules[d].last_in.Add(0);
+            
+        }
+    }
+    int lows = 0;
+    int highs = 0;
+    for (int i=0; i<1000; i++)
+    {
+        Queue<Pulse> pulses = new Queue<Pulse>();
+        pulses.Enqueue(new Pulse(0,"button", "broadcaster"));
+        while (pulses.Count > 0)
+        {
+            Pulse p = pulses.Dequeue();
+            Console.WriteLine(p.source + " sends " + p.value + " to " + p.destination);
+            if (p.value == 0) lows++;
+            else highs++;
+            Module m = modules[p.destination];
+            switch (m.type)
+            {
+                case 1: pulses.Enqueue(new Pulse(0, "button", "broadcaster")); break;
+                case 2:
+                    foreach (string d in m.outputs)
+                    {
+                        pulses.Enqueue(new Pulse(0, m.name, d));
+                    }
+                    break;
+                case 3:
+                    if (p.value == 0)
+                    {
+                        m.state = 1 - m.state;
+                        foreach (string d in m.outputs)
+                        {
+                            pulses.Enqueue(new Pulse(m.state, m.name, d));
+                        }
+                    }
+                    break;
+                case 4:
+                    int j = m.inputs.IndexOf(p.source);
+                    m.last_in[j] = p.value;
+                    bool all_high = true;
+                    foreach (int v in m.last_in) { if (v == 0) { all_high = false; break; } }
+                    foreach (string d in m.outputs)
+                    {
+                        pulses.Enqueue(new Pulse(all_high ? 0 : 1, m.name, d));
+                    }
+                    break;
+            }
+        }
+    }
+    result = (lows) * highs;
     Console.WriteLine(result);
     Console.ReadLine();
 }
@@ -77,10 +142,24 @@ class Module
     public Module (string name, int type)
     {
         this.name = name;
-        this.type = type;   // 1 = button, 2 = broadcaste, 3 = flip-flop, 4 = and, 5 = output
+        this.type = type;   // 0 = no function, 1 = button, 2 = broadcaster, 3 = flip-flop, 4 = and, 5 = output
         this.inputs = new List<string>();
         this.outputs = new List<string>();
         this.last_in = new List<int>();
         this.state = 0;
+    }
+}
+
+class Pulse
+{
+    public int value;
+    public string destination;
+    public string source;
+
+    public Pulse(int value, string source, string destination)
+    {
+        this.value = value;
+        this.source = source;
+        this.destination = destination;
     }
 }
