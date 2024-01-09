@@ -6,7 +6,7 @@ void P1()
     int result = 0;
     int index = 0;
     String data = "inputtst.txt";
-    char[] delims = { '-', '>', ',' };
+    char[] delims = { '-', '>', ',',' ' };
     Dictionary<string, Module> modules = new Dictionary<string, Module>();
     Module button = new Module("button", 1);
     modules.Add("button", button);
@@ -30,6 +30,13 @@ void P1()
                 temp.outputs.Add(parts[i]);
             }
             modules.Add(name, temp);
+        }
+    }
+    foreach (Module m in modules.Values)
+    {
+        foreach (string d in m.outputs)
+        {
+            modules[d].inputs.Add(m.name);  // create the bijection
         }
     }
     Console.WriteLine(result);
