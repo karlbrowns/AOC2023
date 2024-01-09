@@ -6,7 +6,7 @@ void P1()
 {
     int result = 0;
     int index = 0;
-    String data = "input.txt";
+    String data = "inputtst.txt";
     string delim = "{},=";
     int start=-1;
     char[] delims = delim.ToCharArray();
@@ -157,7 +157,7 @@ void P2()
 {
     long result = 0;
     int index = 0;
-    String data = "inputtst.txt";
+    String data = "input.txt";
     string delim = "{},=";
     int start = -1;
     char[] delims = delim.ToCharArray();
@@ -247,6 +247,7 @@ void P2()
             Part2 current = partials.Dequeue();
             List<Conditions> conds = dworkflows[current.dest];
             int cond_count = current.nextcond;
+            Console.WriteLine("Rule: " + current.dest + " condition " + cond_count);
             Conditions c = conds[cond_count];
             {
                 cond_count++;
@@ -310,6 +311,7 @@ void P2()
                     if (c.idest == 2)
                     {
                         results.Add(current);
+                        Console.WriteLine("Add: " + current.dest + " " + current.nextcond + ":" + (current.maxx - current.minx + 1) + "," + (current.maxm - current.minm + 1) + "," + (current.maxa - current.mina + 1) + "," + (current.maxs - current.mins + 1));
                         if (c.type > 0)
                         {
                             nextpart.dest = current.dest;
@@ -340,7 +342,7 @@ void P2()
                     current.nextcond = 0;
                     partials.Enqueue(current);
                 }
-                else if (c.type==-1)
+                else if (c.itype==-1)
                 {
                     results.Add(current);
                 }
