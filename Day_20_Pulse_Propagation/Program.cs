@@ -67,7 +67,7 @@ void P1()
         while (pulses.Count > 0)
         {
             Pulse p = pulses.Dequeue();
-            Console.WriteLine(p.source + " sends " + p.value + " to " + p.destination);
+            //Console.WriteLine(p.source + " sends " + p.value + " to " + p.destination);
             if (p.value == 0) lows++;
             else highs++;
             Module m = modules[p.destination];
@@ -110,19 +110,123 @@ void P1()
 
 void P2()
 {
-    int result = 0;
+    long result = 0;
     int index = 0;
     String data = "input.txt";
+    char[] delims = { '-', '>', ',', ' ' };
+    Dictionary<string, Module> modules = new Dictionary<string, Module>();
+    Module button = new Module("button", 1);
+    modules.Add("button", button);
+    modules["button"].outputs.Add("broadcaster");
     foreach (string line in System.IO.File.ReadLines(data))
     {
+        string[] parts = line.Split(delims, StringSplitOptions.RemoveEmptyEntries);
+        if (parts.Length > 0)
+        {
+            int type = 0;
+            parts[0] = parts[0].Trim();
+            if (parts[0][0] == '%') type = 3;
+            else if (parts[0][0] == '&') type = 4;
+            else if (string.Compare(parts[0], "broadcaster") == 0) type = 2;
+            else type = 5;
+            string name;
+            if ((type == 3) || (type == 4)) name = parts[0].Substring(1);
+            else name = parts[0];
+            Module temp = new Module(name, type);
+            for (int i = 1; i < parts.Length; i++)
+            {
+                temp.outputs.Add(parts[i]);
+            }
+            modules.Add(name, temp);
+        }
     }
-    Console.WriteLine(result);
+    List<string> outputs = new List<string>();
+    foreach (Module m in modules.Values)
+    {
+        foreach (string d in m.outputs)
+        {
+            if (!modules.ContainsKey(d)) outputs.Add(d);
+        }
+    }
+    foreach (string d in outputs)
+    {
+        modules.Add(d, new Module(d, 0));
+    }
+    foreach (Module m in modules.Values)
+    {
+        foreach (string d in m.outputs)
+        {
+            if (!modules.ContainsKey(d))
+            {
+                modules.Add(d, new Module(d, 0));
+            }
+            modules[d].inputs.Add(m.name);  // create the bijection
+            modules[d].last_in.Add(0);
+
+        }
+    }
+    long presses = 0;
+    bool rx_low = false;
+    while (presses<10000) 
+    {
+        rx_low = false;
+        int rx_lows = 0;
+        Queue<Pulse> pulses = new Queue<Pulse>();
+        pulses.Enqueue(new Pulse(0, "button", "broadcaster"));
+        presses++;
+        while (pulses.Count > 0)
+        {
+            Pulse p = pulses.Dequeue();
+            //Console.WriteLine(p.source + " sends " + p.value + " to " + p.destination);
+            if ((p.value == 1) && ((p.source == "lh") || (p.source =="fk") || (p.source =="ff") || (p.source =="mm")))
+            {
+                //rx_lows++;
+                Console.WriteLine("1 at " + p.source + " in " + presses + " button presses");
+            }
+            //if (p.destination == "rx") Console.Write('r');
+            Module m = modules[p.destination];
+            switch (m.type)
+            {
+                case 1: pulses.Enqueue(new Pulse(0, "button", "broadcaster")); break;
+                case 2:
+                    foreach (string d in m.outputs)
+                    {
+                        pulses.Enqueue(new Pulse(0, m.name, d));
+                    }
+                    break;
+                case 3:
+                    if (p.value == 0)
+                    {
+                        m.state = 1 - m.state;
+                        foreach (string d in m.outputs)
+                        {
+                            pulses.Enqueue(new Pulse(m.state, m.name, d));
+                        }
+                    }
+                    break;
+                case 4:
+                    int j = m.inputs.IndexOf(p.source);
+                    m.last_in[j] = p.value;
+                    bool all_high = true;
+                    foreach (int v in m.last_in) { if (v == 0) { all_high = false; break; } }
+                    foreach (string d in m.outputs)
+                    {
+                        pulses.Enqueue(new Pulse(all_high ? 0 : 1, m.name, d));
+                    }
+                    break;
+            }
+        }
+        if (rx_lows == 1) rx_low = true;
+        //if ((presses % 1000) == 0) Console.Write('.');
+        if ((presses % 1000000) == 0) Console.Write('!');
+    }
+    Console.WriteLine(presses);
     Console.ReadLine();
 }
 
 Stopwatch t = new Stopwatch();
 t.Start();
-P1();
+//P1();
 t.Stop();
 Console.WriteLine("P1 took " + t.ElapsedMilliseconds/1000.0 + " seconds");
 t.Restart();
