@@ -46,7 +46,7 @@ void P1()
     int index = 0;
     int x=0, y=0;
     List<List<int>> map = new List<List<int>>();
-    String data = "inputtst.txt";
+    String data = "input.txt";
     foreach (string line in System.IO.File.ReadLines(data))
     {
         map.Add(new List<int>());
@@ -69,15 +69,26 @@ void P1()
     int steps = 0;
     List<Point> points = new List<Point>();
     points.Add(new Point(startx, starty));
-    while (steps<64)
+    while (steps<150)
     {
         points = find_neighbours (points, map);
         steps++;
+    }
+    for (y = 0; y<map.Count ; y++)
+    {
+        for (x = 0; x < map[0].Count ; x++)
+        {
+            if (points.Contains(new Point(x, y))) Console.Write('O');
+            else if (map[y][x] == -1) Console.Write('#');
+            else Console.Write('.');
+        }
+        Console.WriteLine();
     }
     Console.WriteLine(points.Count);
     Console.ReadLine();
 }
 
+//7495 for the complete grid.
 void P2()
 {
     int result = 0;
@@ -121,7 +132,8 @@ void P2()
     }
     points.Clear();
     points.Add(new Point(startx, starty));
-    for (steps = 0; steps < 5000; steps++)
+    steps = 26501365;
+ //   for (steps = 0; steps < 26501365; steps++)
     {
         HashSet<Point> newpoints = new HashSet<Point>();
         foreach (Point p in points)
